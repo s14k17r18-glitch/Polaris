@@ -9,7 +9,8 @@ class MotionTokens {
   static const Duration durationFast = Duration(milliseconds: 150);
   static const Duration durationNormal = Duration(milliseconds: 300);
   static const Duration durationSlow = Duration(milliseconds: 500);
-  static const Duration durationGenesis = Duration(milliseconds: 5000); // Genesis Sequence
+  static const Duration durationGenesis =
+      Duration(milliseconds: 5000); // Genesis Sequence
 
   // Curve（Ease-Out-Expo: "Fluid Sci-Fi"）
   static const Curve curveDefault = Curves.easeOutExpo;
