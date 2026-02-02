@@ -1,0 +1,2 @@
+# motion_tokens パッケージの analysis_options.yaml
+include: ../../analysis_options.yaml
