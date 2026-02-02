@@ -16,6 +16,7 @@
 # 常時ルール（運用の固定：毎回必ず参照）
 @.claude/rules/10-runloop.md
 @.claude/rules/20-git.md
+@.claude/rules/25-autofix-loop.md
 @.claude/rules/30-test.md
 @.claude/rules/40-release.md
 @.claude/rules/50-style.md
