@@ -1,5 +1,10 @@
 // 共通コア: 状態遷移・会話エンジン・データモデル・同期クライアント
 
+// M0: Schema (A3 で実装済み)
+export 'src/schema/version.dart';
+export 'src/schema/migration.dart';
+export 'src/schema/migrations/migration_0_to_1.dart';
+
 // M0: 枠のみ（M1以降で実装）
 // export 'src/models/session.dart';
 // export 'src/state/session_state.dart';
