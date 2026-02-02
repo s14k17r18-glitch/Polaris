@@ -5,8 +5,12 @@ export 'src/schema/version.dart';
 export 'src/schema/migration.dart';
 export 'src/schema/migrations/migration_0_to_1.dart';
 
+// M0: State (B1 で実装済み)
+export 'src/state/session_state.dart';
+export 'src/state/session_event.dart';
+export 'src/state/session_machine.dart';
+
 // M0: 枠のみ（M1以降で実装）
 // export 'src/models/session.dart';
-// export 'src/state/session_state.dart';
 // export 'src/engine/conversation_engine.dart';
 // export 'src/sync/sync_client.dart';
