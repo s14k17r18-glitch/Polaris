@@ -45,7 +45,7 @@ class HomeScreen extends StatelessWidget {
               L10nJa.helloWorld,
               style: TextStyle(
                 fontSize: 16,
-                color: UITokens.colorAccent.withOpacity(0.8),
+                color: UITokens.colorAccent.withAlpha(204), // 0.8 * 255
               ),
             ),
           ],
