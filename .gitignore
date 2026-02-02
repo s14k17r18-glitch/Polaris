@@ -1,0 +1,92 @@
+# Dart / Flutter
+.dart_tool/
+.packages
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+pubspec.lock
+
+# Generated files
+*.g.dart
+*.freezed.dart
+*.mocks.dart
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+*.swp
+*.swo
+*~
+
+# Windows
+*.dll
+*.exe
+*.exp
+*.lib
+*.pdb
+Thumbs.db
+desktop.ini
+
+# iOS
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+DerivedData/
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+
+# Android (将来用)
+*.jks
+*.keystore
+local.properties
+android/.gradle/
+android/captures/
+android/gradlew
+android/gradlew.bat
+android/local.properties
+
+# Melos
+.melos_tool/
+melos_*.yaml
+
+# 環境変数・秘密情報
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+credentials.json
+secrets.yaml
+firebase_options.dart
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Coverage
+coverage/
+*.lcov
+
+# Test related
+.test_coverage.dart
+test/.test_coverage.dart

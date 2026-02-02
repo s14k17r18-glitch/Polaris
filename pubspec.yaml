@@ -1,0 +1,16 @@
+name: hokyoksei_workspace
+description: Hokyoksei monorepo (Windows + iOS)
+version: 0.1.0
+publish_to: none
+
+environment:
+  sdk: ">=3.6.0 <4.0.0"
+
+# Pub Workspaces 定義
+# workspace:
+#  - apps/*
+#  - packages/*
+
+# Melos 管理ツール
+dev_dependencies:
+  melos: ^7.3.0

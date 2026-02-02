@@ -1,0 +1,14 @@
+name: l10n_ja
+description: 日本語文言（ユーザー可視はここだけ）
+version: 0.1.0
+publish_to: none
+
+environment:
+  sdk: ">=3.6.0 <4.0.0"
+
+dependencies:
+  # 純粋 Dart パッケージ（Flutter 非依存）
+
+dev_dependencies:
+  test: ^1.25.0
+  lints: ^5.0.0

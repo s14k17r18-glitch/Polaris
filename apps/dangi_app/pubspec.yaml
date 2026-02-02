@@ -1,0 +1,30 @@
+name: dangi_app
+description: 北極星 談議アプリ（Windows + iOS）
+version: 0.1.0
+publish_to: none
+
+environment:
+  sdk: ">=3.6.0 <4.0.0"
+  flutter: ">=3.27.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # ローカルパッケージ依存
+  shared_core:
+    path: ../../packages/shared_core
+  ui_tokens:
+    path: ../../packages/ui_tokens
+  motion_tokens:
+    path: ../../packages/motion_tokens
+  l10n_ja:
+    path: ../../packages/l10n_ja
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
