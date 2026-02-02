@@ -1,19 +1,33 @@
 // 北極星（Hokyoksei）基本ウィジェットテスト
-// M0: Hello World 表示確認
+// M0-B2: 状態遷移と画面切り替えの確認
 
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:dangi_app/main.dart';
 
 void main() {
-  testWidgets('DangiApp smoke test', (WidgetTester tester) async {
-    // アプリをビルドしてフレームをトリガー
+  testWidgets('DangiApp 状態遷移テスト', (WidgetTester tester) async {
+    // アプリをビルド
     await tester.pumpWidget(const DangiApp());
 
-    // アプリタイトルが表示されることを確認
+    // 初期状態: BOOT（起動中）
     expect(find.text('北極星（Hokyoksei）'), findsOneWidget);
+    expect(find.text('起動中...'), findsOneWidget);
 
-    // Hello World メッセージが表示されることを確認
-    expect(find.text('M0: 骨組み確認用 Hello World'), findsOneWidget);
+    // postFrameCallback で IDLE へ遷移
+    await tester.pumpAndSettle();
+
+    // IDLE 状態: 待機中画面
+    expect(find.text('北極星（Hokyoksei）'), findsOneWidget);
+    expect(find.text('待機中'), findsOneWidget);
+    expect(find.text('開始'), findsOneWidget);
+
+    // 「開始」ボタンをタップ → THEME_INPUT へ遷移
+    await tester.tap(find.text('開始'));
+    await tester.pumpAndSettle();
+
+    // THEME_INPUT 状態: テーマ入力画面
+    expect(find.text('テーマ入力'), findsOneWidget);
+    expect(find.text('次へ'), findsOneWidget);
   });
 }
