@@ -10,7 +10,11 @@ export 'src/state/session_state.dart';
 export 'src/state/session_event.dart';
 export 'src/state/session_machine.dart';
 
-// M0: 枠のみ（M1以降で実装）
+// M1: Persona (C1 で実装)
+export 'src/persona/persona_definition.dart';
+export 'src/persona/persona_repository.dart';
+
+// M1以降で実装
 // export 'src/models/session.dart';
 // export 'src/engine/conversation_engine.dart';
 // export 'src/sync/sync_client.dart';
