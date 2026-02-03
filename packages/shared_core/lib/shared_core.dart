@@ -39,5 +39,9 @@ export 'src/model/message_entity.dart';
 export 'src/model/guard_event_entity.dart';
 export 'src/model/crystal_entity.dart';
 
+// M2: Storage (E2 で実装：ローカル保存基盤)
+export 'src/storage/local_store.dart';
+export 'src/storage/in_memory_store.dart';
+
 // M2以降で実装
 // export 'src/sync/sync_client.dart';
