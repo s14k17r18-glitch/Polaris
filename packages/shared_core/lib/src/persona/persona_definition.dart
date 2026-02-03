@@ -78,7 +78,7 @@ class PersonaDefinition {
   }
 
   @override
-  String toString() => 'Persona($id: $name)';
+  String toString() => 'Persona（ID: $id、名前: $name）';
 
   @override
   bool operator ==(Object other) =>
