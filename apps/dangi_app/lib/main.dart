@@ -53,6 +53,9 @@ class _SessionScreenState extends State<SessionScreen> {
   String _currentMessage = '';
   bool _isStreaming = false;
 
+  // M1-D4: Crystal Draft（結晶化画面で表示）
+  CrystalDraft? _crystalDraft;
+
   @override
   void initState() {
     super.initState();
@@ -105,6 +108,8 @@ class _SessionScreenState extends State<SessionScreen> {
         return _buildNotImplementedScreen(L10nJa.stateIgnition);
       case SessionState.discussion:
         return _buildDiscussionScreen();
+      case SessionState.convergence:
+        return _buildConvergenceScreen();
       default:
         return _buildNotImplementedScreen(_machine.current.displayName);
     }
@@ -391,8 +396,146 @@ class _SessionScreenState extends State<SessionScreen> {
     );
   }
 
-  /// 結論トリガーハンドラ（M1-D2）
+  /// 結論トリガーハンドラ（M1-D2, M1-D4で拡張）
   void _handleConclusion() {
+    // M1-D4: Crystal Draft を生成
+    if (_conversationEngine != null) {
+      setState(() {
+        _crystalDraft = SummaryCrystal.generateCrystalDraft(
+          theme: 'テスト議題', // TODO: M1で実装時に実際のテーマを渡す
+          messages: _messages,
+          participants: PersonaRepository.instance.getAll(),
+          turnCount: _conversationEngine!.currentTurnIndex,
+        );
+      });
+    }
+
     _transition(SessionEvent.conclusionTriggered);
+  }
+
+  /// 結晶化画面（M1-D4）
+  Widget _buildConvergenceScreen() {
+    if (_crystalDraft == null) {
+      return Center(
+        child: Text(
+          'Crystal を生成できませんでした',
+          style: TextStyle(
+            fontSize: 16,
+            color: UITokens.colorAccent,
+          ),
+        ),
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.all(UITokens.spacingLg),
+      child: Column(
+        children: [
+          // ヘッダー
+          Text(
+            L10nJa.stateConvergence,
+            style: TextStyle(
+              fontSize: 24,
+              color: UITokens.colorAccent,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: UITokens.spacingMd),
+          Text(
+            L10nJa.descConvergence,
+            style: TextStyle(
+              fontSize: 14,
+              color: UITokens.colorAccent.withAlpha(153),
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: UITokens.spacingLg),
+
+          // Crystal 内容表示エリア（スクロール可能）
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: UITokens.colorAccent.withAlpha(77),
+                ),
+                borderRadius: BorderRadius.circular(UITokens.radiusMd),
+              ),
+              padding: const EdgeInsets.all(UITokens.spacingMd),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // タイトル
+                    _buildCrystalField(
+                      label: L10nJa.labelCrystalTitle,
+                      value: _crystalDraft!.title,
+                    ),
+                    const SizedBox(height: UITokens.spacingMd),
+
+                    // テーマ
+                    _buildCrystalField(
+                      label: L10nJa.labelCrystalTheme,
+                      value: _crystalDraft!.theme,
+                    ),
+                    const SizedBox(height: UITokens.spacingMd),
+
+                    // 参加者
+                    _buildCrystalField(
+                      label: L10nJa.labelCrystalParticipants,
+                      value: _crystalDraft!.participants
+                          .map((p) => p.name)
+                          .join('、'),
+                    ),
+                    const SizedBox(height: UITokens.spacingLg),
+
+                    // 要約
+                    _buildCrystalField(
+                      label: L10nJa.labelCrystalSummary,
+                      value: _crystalDraft!.summary,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+          const SizedBox(height: UITokens.spacingLg),
+
+          // アクションボタン
+          _buildActionButton(
+            label: L10nJa.buttonToHistory,
+            onPressed: () => _transition(SessionEvent.crystalSaved),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Crystal フィールド表示（ラベル＋値）
+  Widget _buildCrystalField({
+    required String label,
+    required String value,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 14,
+            color: UITokens.colorAccent.withAlpha(153),
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: UITokens.spacingSm),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 16,
+            color: UITokens.colorAccent,
+          ),
+        ),
+      ],
+    );
   }
 }

@@ -24,6 +24,9 @@ export 'src/conversation/conversation_engine.dart';
 // M1: Conversation (D3 で実装)
 export 'src/conversation/guard.dart';
 
+// M1: Conversation (D4 で実装)
+export 'src/conversation/summary_crystal.dart';
+
 // M1以降で実装
 // export 'src/models/session.dart';
 // export 'src/sync/sync_client.dart';

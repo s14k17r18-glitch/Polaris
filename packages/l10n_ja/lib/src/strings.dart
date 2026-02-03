@@ -18,6 +18,9 @@ class L10nJa {
   static const String stateIgnition = 'セッション開始';
   static const String stateDiscussion = '議論中';
 
+  // 状態表示（M1-D4 で追加）
+  static const String stateConvergence = '結晶化';
+
   // ボタン（B2 で追加）
   static const String buttonStart = '開始';
   static const String buttonNext = '次へ';
@@ -26,6 +29,9 @@ class L10nJa {
   static const String buttonNextTurn = '次の発言';
   static const String buttonConclusion = '結論へ';
 
+  // ボタン（M1-D4 で追加）
+  static const String buttonToHistory = '履歴へ';
+
   // 状態説明（B2 で追加）
   static const String descIdle = 'セッションを開始するには「開始」をタップしてください';
   static const String descThemeInput = 'テーマを入力してください（M1で実装）';
@@ -33,6 +39,15 @@ class L10nJa {
 
   // 状態説明（M1-D2 で追加）
   static const String descDiscussion = '談議が進行中です。「次の発言」で議論を続けます。';
+
+  // 状態説明（M1-D4 で追加）
+  static const String descConvergence = '談議が結晶化されました。以下の内容をご確認ください。';
+
+  // Crystal 項目ラベル（M1-D4 で追加）
+  static const String labelCrystalTitle = 'タイトル';
+  static const String labelCrystalTheme = 'テーマ';
+  static const String labelCrystalSummary = '要約';
+  static const String labelCrystalParticipants = '参加者';
 
   // ペルソナ（M1-D3 で追加）
   static const String moderatorName = '司会';
