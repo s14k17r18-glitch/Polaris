@@ -10,6 +10,9 @@ export 'src/state/session_state.dart';
 export 'src/state/session_event.dart';
 export 'src/state/session_machine.dart';
 
+// M1: State (B3 で実装)
+export 'src/state/error_context.dart';
+
 // M1: Persona (C1 で実装)
 export 'src/persona/persona_definition.dart';
 export 'src/persona/persona_repository.dart';

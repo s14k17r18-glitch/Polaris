@@ -110,6 +110,8 @@ class _SessionScreenState extends State<SessionScreen> {
         return _buildDiscussionScreen();
       case SessionState.convergence:
         return _buildConvergenceScreen();
+      case SessionState.error:
+        return _buildErrorScreen();
       default:
         return _buildNotImplementedScreen(_machine.current.displayName);
     }
@@ -537,5 +539,111 @@ class _SessionScreenState extends State<SessionScreen> {
         ),
       ],
     );
+  }
+
+  /// エラー画面（M1-B3）
+  Widget _buildErrorScreen() {
+    final errorMessage =
+        _machine.errorContext?.message ?? L10nJa.errorGeneric;
+    final details = _machine.errorContext?.details;
+
+    return Padding(
+      padding: const EdgeInsets.all(UITokens.spacingLg),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // ヘッダー
+          Text(
+            L10nJa.stateError,
+            style: TextStyle(
+              fontSize: 24,
+              color: UITokens.colorAccent,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: UITokens.spacingLg),
+
+          // エラーメッセージ
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: UITokens.colorAccent.withAlpha(77)),
+              borderRadius: BorderRadius.circular(UITokens.radiusMd),
+            ),
+            padding: const EdgeInsets.all(UITokens.spacingMd),
+            child: Text(
+              errorMessage,
+              style: TextStyle(
+                fontSize: 16,
+                color: UITokens.colorAccent,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+
+          if (details != null) ...[
+            const SizedBox(height: UITokens.spacingMd),
+            ExpansionTile(
+              title: Text(
+                '詳細情報',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: UITokens.colorAccent,
+                ),
+              ),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(UITokens.spacingMd),
+                  child: Text(
+                    details,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: UITokens.colorAccent.withAlpha(204),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+
+          const SizedBox(height: UITokens.spacingMd),
+          Text(
+            L10nJa.errorRecoveryHint,
+            style: TextStyle(
+              fontSize: 14,
+              color: UITokens.colorAccent.withAlpha(153),
+            ),
+            textAlign: TextAlign.center,
+          ),
+
+          const SizedBox(height: UITokens.spacingXl),
+
+          // ボタン（縦並び）
+          _buildActionButton(
+            label: L10nJa.buttonRetry,
+            onPressed: () => _handleErrorRecovered(),
+          ),
+          const SizedBox(height: UITokens.spacingMd),
+          _buildActionButton(
+            label: L10nJa.buttonAbort,
+            onPressed: () => _handleErrorAbort(),
+          ),
+          const SizedBox(height: UITokens.spacingMd),
+          _buildActionButton(
+            label: L10nJa.buttonResume,
+            onPressed: () => _handleErrorRecovered(), // 再試行と同じ
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// エラーリカバリーハンドラ（再試行/再開）（M1-B3）
+  void _handleErrorRecovered() {
+    _transition(SessionEvent.recovered);
+  }
+
+  /// エラー中断ハンドラ（M1-B3）
+  void _handleErrorAbort() {
+    _transition(SessionEvent.sessionEnded);
   }
 }

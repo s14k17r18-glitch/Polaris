@@ -3,6 +3,7 @@
 
 import 'session_state.dart';
 import 'session_event.dart';
+import 'error_context.dart';
 
 /// 不正な状態遷移が発生した場合の例外
 class InvalidTransitionException implements Exception {
@@ -36,32 +37,42 @@ class SessionMachine {
   /// エラー発生前の状態（リカバリー用）
   SessionState? _previousState;
 
+  /// エラーコンテキスト（M1-B3で追加）
+  ErrorContext? _errorContext;
+
   /// 現在の状態
   SessionState get current => _current;
 
   /// エラー発生前の状態（リカバリー先）
   SessionState? get previousState => _previousState;
 
+  /// 現在のエラーコンテキスト（M1-B3で追加）
+  ErrorContext? get errorContext => _errorContext;
+
   /// イベントを処理して次の状態へ遷移
   ///
   /// [event]: 発生したイベント
+  /// [errorContext]: エラーコンテキスト（errorOccurred の場合のみ）
   /// 返り値: 遷移後の状態
   ///
   /// 不正な遷移の場合は [InvalidTransitionException] を throw
-  SessionState transition(SessionEvent event) {
+  SessionState transition(SessionEvent event, {ErrorContext? errorContext}) {
     final next = _getNextState(_current, event);
     if (next == null) {
       throw InvalidTransitionException(from: _current, event: event);
     }
 
-    // エラー遷移の場合、前の状態を保存
+    // エラー遷移の場合、前の状態とエラー情報を保存
     if (event == SessionEvent.errorOccurred) {
       _previousState = _current;
+      _errorContext = errorContext;
     }
 
-    // リカバリーの場合、前の状態をクリア
-    if (event == SessionEvent.recovered) {
+    // リカバリーまたは中断の場合、前の状態とエラー情報をクリア
+    if (event == SessionEvent.recovered ||
+        (event == SessionEvent.sessionEnded && _current == SessionState.error)) {
       _previousState = null;
+      _errorContext = null;
     }
 
     _current = next;
@@ -143,7 +154,9 @@ class SessionMachine {
         break;
 
       case SessionState.error:
-        // error 状態からは recovered イベントのみ（上で処理済み）
+        // M1-B3: error 状態からの遷移追加
+        if (event == SessionEvent.sessionEnded) return SessionState.idle;
+        // recovered イベントは上で処理済み
         break;
     }
 

@@ -21,6 +21,9 @@ class L10nJa {
   // 状態表示（M1-D4 で追加）
   static const String stateConvergence = '結晶化';
 
+  // 状態表示（M1-B3 で追加）
+  static const String stateError = 'エラー';
+
   // ボタン（B2 で追加）
   static const String buttonStart = '開始';
   static const String buttonNext = '次へ';
@@ -31,6 +34,11 @@ class L10nJa {
 
   // ボタン（M1-D4 で追加）
   static const String buttonToHistory = '履歴へ';
+
+  // ボタン（M1-B3 で追加）
+  static const String buttonRetry = '再試行';
+  static const String buttonAbort = '中断';
+  static const String buttonResume = '再開';
 
   // 状態説明（B2 で追加）
   static const String descIdle = 'セッションを開始するには「開始」をタップしてください';
@@ -51,6 +59,10 @@ class L10nJa {
 
   // ペルソナ（M1-D3 で追加）
   static const String moderatorName = '司会';
+
+  // エラーメッセージ（M1-B3 で追加）
+  static const String errorGeneric = 'エラーが発生しました';
+  static const String errorRecoveryHint = '再試行するか、セッションを中断できます';
 
   // M1以降で追加
   // static const String errorNetwork = 'ネットワークエラーが発生しました';
