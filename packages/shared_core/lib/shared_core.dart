@@ -30,6 +30,14 @@ export 'src/conversation/guard.dart';
 // M1: Conversation (D4 で実装)
 export 'src/conversation/summary_crystal.dart';
 
-// M1以降で実装
-// export 'src/models/session.dart';
+// M2: Model (E1 で実装：保存・同期用データモデル)
+export 'src/model/sync_metadata.dart';
+export 'src/model/persona_entity.dart';
+export 'src/model/persona_snapshot_entity.dart';
+export 'src/model/session_entity.dart';
+export 'src/model/message_entity.dart';
+export 'src/model/guard_event_entity.dart';
+export 'src/model/crystal_entity.dart';
+
+// M2以降で実装
 // export 'src/sync/sync_client.dart';
