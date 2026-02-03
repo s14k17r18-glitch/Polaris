@@ -34,6 +34,9 @@ class L10nJa {
   // 状態説明（M1-D2 で追加）
   static const String descDiscussion = '談議が進行中です。「次の発言」で議論を続けます。';
 
+  // ペルソナ（M1-D3 で追加）
+  static const String moderatorName = '司会';
+
   // M1以降で追加
   // static const String errorNetwork = 'ネットワークエラーが発生しました';
 }

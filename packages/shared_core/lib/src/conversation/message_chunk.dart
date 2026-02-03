@@ -2,7 +2,7 @@
 
 /// メッセージチャンク（ストリーミング配信用）
 ///
-/// ターン生成時に Stream<MessageChunk> で配信される。
+/// ターン生成時に `Stream<MessageChunk>` で配信される。
 /// M1-D2 では疑似ストリーミング（チャンク分割＋delay）で使用。
 class MessageChunk {
   const MessageChunk({

@@ -103,5 +103,24 @@ void main() {
         throwsA(isA<StateError>()),
       );
     });
+
+    // M1-D3: ガード判定テスト
+    group('ガード判定（M1-D3）', () {
+      test('通常の発言はガード発動しない', () async {
+        final engine = ConversationEngine(
+          theme: 'テストテーマ',
+          personas: PersonaRepository.instance.getAll(),
+        );
+
+        final chunks = await engine.nextTurn().toList();
+
+        // moderator の介入がないことを確認
+        expect(chunks.any((c) => c.speakerId == 'moderator'), false);
+      });
+
+      // 注: スタブ実装では固定応答のため、ガード発動のテストは
+      //     実際の LLM 接続後に実装します（M2 以降）
+      //     現時点では Guard クラスの単体テストで動作を保証します
+    });
   });
 }
