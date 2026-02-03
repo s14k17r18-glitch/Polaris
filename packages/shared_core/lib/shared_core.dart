@@ -17,7 +17,10 @@ export 'src/persona/persona_repository.dart';
 // M1: Conversation (D1 で実装)
 export 'src/conversation/prompt_template.dart';
 
+// M1: Conversation (D2 で実装)
+export 'src/conversation/message_chunk.dart';
+export 'src/conversation/conversation_engine.dart';
+
 // M1以降で実装
 // export 'src/models/session.dart';
-// export 'src/engine/conversation_engine.dart';
 // export 'src/sync/sync_client.dart';

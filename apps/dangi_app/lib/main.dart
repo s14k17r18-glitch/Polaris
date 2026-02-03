@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:ui_tokens/ui_tokens.dart';
 import 'package:l10n_ja/l10n_ja.dart';
@@ -41,6 +42,17 @@ class SessionScreen extends StatefulWidget {
 class _SessionScreenState extends State<SessionScreen> {
   final SessionMachine _machine = SessionMachine();
 
+  // M1-D2: 会話エンジン（discussion 状態で初期化）
+  ConversationEngine? _conversationEngine;
+
+  // M1-D2: ストリーム購読用
+  StreamSubscription<MessageChunk>? _streamSubscription;
+
+  // M1-D2: 表示中のメッセージ（蓄積）
+  final List<String> _messages = [];
+  String _currentMessage = '';
+  bool _isStreaming = false;
+
   @override
   void initState() {
     super.initState();
@@ -48,6 +60,12 @@ class _SessionScreenState extends State<SessionScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _transition(SessionEvent.appStarted);
     });
+  }
+
+  @override
+  void dispose() {
+    _streamSubscription?.cancel();
+    super.dispose();
   }
 
   /// イベントを発火して状態遷移
@@ -79,6 +97,14 @@ class _SessionScreenState extends State<SessionScreen> {
         return _buildThemeInputScreen();
       case SessionState.personaSelect:
         return _buildNotImplementedScreen(L10nJa.statePersonaSelect);
+      case SessionState.ignition:
+        // ignition → discussion の自動遷移（M1-D2）
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _transition(SessionEvent.sessionStarted);
+        });
+        return _buildNotImplementedScreen(L10nJa.stateIgnition);
+      case SessionState.discussion:
+        return _buildDiscussionScreen();
       default:
         return _buildNotImplementedScreen(_machine.current.displayName);
     }
@@ -219,7 +245,7 @@ class _SessionScreenState extends State<SessionScreen> {
   /// アクションボタン（共通スタイル）
   Widget _buildActionButton({
     required String label,
-    required VoidCallback onPressed,
+    required VoidCallback? onPressed,
   }) {
     return ElevatedButton(
       onPressed: onPressed,
@@ -242,5 +268,131 @@ class _SessionScreenState extends State<SessionScreen> {
         ),
       ),
     );
+  }
+
+  /// 議論中画面（M1-D2）
+  Widget _buildDiscussionScreen() {
+    return Padding(
+      padding: const EdgeInsets.all(UITokens.spacingLg),
+      child: Column(
+        children: [
+          // ヘッダー
+          Text(
+            L10nJa.stateDiscussion,
+            style: TextStyle(
+              fontSize: 24,
+              color: UITokens.colorAccent,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: UITokens.spacingMd),
+
+          // メッセージ表示エリア（スクロール可能）
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: UITokens.colorAccent.withAlpha(77),
+                ),
+                borderRadius: BorderRadius.circular(UITokens.radiusMd),
+              ),
+              padding: const EdgeInsets.all(UITokens.spacingMd),
+              child: ListView.builder(
+                itemCount:
+                    _messages.length + (_currentMessage.isNotEmpty ? 1 : 0),
+                itemBuilder: (context, index) {
+                  if (index < _messages.length) {
+                    return Padding(
+                      padding:
+                          const EdgeInsets.only(bottom: UITokens.spacingSm),
+                      child: Text(
+                        _messages[index],
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: UITokens.colorAccent,
+                        ),
+                      ),
+                    );
+                  } else {
+                    // 現在ストリーミング中のメッセージ
+                    return Text(
+                      _currentMessage,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: UITokens.colorAccent,
+                      ),
+                    );
+                  }
+                },
+              ),
+            ),
+          ),
+
+          const SizedBox(height: UITokens.spacingLg),
+
+          // アクションボタン
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _buildActionButton(
+                label: L10nJa.buttonNextTurn,
+                onPressed: _isStreaming ? null : _handleNextTurn,
+              ),
+              _buildActionButton(
+                label: L10nJa.buttonConclusion,
+                onPressed: _isStreaming ? null : _handleConclusion,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 次のターン生成ハンドラ（M1-D2）
+  void _handleNextTurn() async {
+    // ConversationEngine 初期化（初回のみ）
+    _conversationEngine ??= ConversationEngine(
+      theme: 'テスト議題', // TODO: M1で実装時に実際のテーマを渡す
+      personas: PersonaRepository.instance.getAll(),
+    );
+
+    setState(() {
+      _isStreaming = true;
+      _currentMessage = '';
+    });
+
+    // 前回のストリーム購読をキャンセル
+    await _streamSubscription?.cancel();
+
+    // ストリーム購読開始
+    _streamSubscription = _conversationEngine!.nextTurn().listen(
+      (chunk) {
+        setState(() {
+          _currentMessage += chunk.textFragment;
+
+          // ストリーム完了時
+          if (chunk.isComplete) {
+            _messages.add('${chunk.speakerName}：$_currentMessage');
+            _currentMessage = '';
+            _isStreaming = false;
+
+            // 状態遷移: turnCompleted イベント発火
+            _transition(SessionEvent.turnCompleted);
+          }
+        });
+      },
+      onError: (error) {
+        setState(() {
+          _isStreaming = false;
+        });
+        // TODO: エラーハンドリング（M1-B3 で実装）
+      },
+    );
+  }
+
+  /// 結論トリガーハンドラ（M1-D2）
+  void _handleConclusion() {
+    _transition(SessionEvent.conclusionTriggered);
   }
 }
