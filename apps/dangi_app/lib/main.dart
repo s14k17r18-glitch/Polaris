@@ -506,7 +506,7 @@ class _SessionScreenState extends State<SessionScreen> {
           // アクションボタン
           _buildActionButton(
             label: L10nJa.buttonToHistory,
-            onPressed: () => _transition(SessionEvent.crystalSaved),
+            onPressed: () => _transition(SessionEvent.sessionEnded),
           ),
         ],
       ),

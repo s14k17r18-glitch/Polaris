@@ -21,6 +21,9 @@ dependencies:
   l10n_ja:
     path: ../../packages/l10n_ja
 
+  # M2-E3: 永続化
+  path_provider: ^2.1.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
