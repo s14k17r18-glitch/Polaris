@@ -2,11 +2,14 @@
 // M0-B2: 状態遷移と画面切り替えの確認
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:dangi_app/main.dart';
 
 void main() {
   testWidgets('DangiApp 状態遷移テスト', (WidgetTester tester) async {
+    // M3-F1: AuthRepository 用モック設定
+    SharedPreferences.setMockInitialValues({});
     // アプリをビルド
     await tester.pumpWidget(const DangiApp());
 
