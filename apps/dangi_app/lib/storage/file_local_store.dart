@@ -33,15 +33,15 @@ class FileLocalStore implements LocalStore {
 
   // ========== Helper: 追記 ==========
   Future<void> _append(String filename, Map<String, dynamic> data) async {
-    final dir = await _dir;
+    await _dir; // ディレクトリ初期化を保証
     final file = _getFile(filename);
-    final line = jsonEncode(data) + '\n';
+    final line = '${jsonEncode(data)}\n';
     await file.writeAsString(line, mode: FileMode.append);
   }
 
   // ========== Helper: 全読み込み ==========
   Future<List<Map<String, dynamic>>> _readAll(String filename) async {
-    final dir = await _dir;
+    await _dir; // ディレクトリ初期化を保証
     final file = _getFile(filename);
     if (!await file.exists()) return [];
 

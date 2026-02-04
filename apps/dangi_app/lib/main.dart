@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:ui_tokens/ui_tokens.dart';
 import 'package:l10n_ja/l10n_ja.dart';
 import 'package:shared_core/shared_core.dart';
+import 'auth/auth_repository.dart';
 import 'storage/file_local_store.dart';
 
 void main() {
@@ -60,11 +61,12 @@ class _SessionScreenState extends State<SessionScreen> {
   // M2-E4: 永続化ストア
   final FileLocalStore _store = FileLocalStore();
 
-  // M2-E4: 現在のセッションID（MVP: 固定値）
+  // M2-E4: 現在のセッションID
   String? _currentSessionId;
-  final String _ownerUserId = 'mvp_user';
-  final String _deviceId = 'mvp_device';
   int _turnIndex = 0;
+
+  // M3-F1: Auth（永続化された device_id / owner_user_id）
+  late AuthRepository _authRepository;
 
   // M2-E5: 履歴表示フラグ
   bool _showingHistory = false;
@@ -74,6 +76,9 @@ class _SessionScreenState extends State<SessionScreen> {
     super.initState();
     // BOOT → IDLE への自動遷移（アプリ起動完了）
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      // M3-F1: Auth 初期化（最優先）
+      _authRepository = await AuthRepository.initialize();
+
       _transition(SessionEvent.appStarted);
       // M2-E4: 最新セッション復元
       await _restoreLatestSession();
@@ -711,11 +716,11 @@ class _SessionScreenState extends State<SessionScreen> {
         },
         sync: SyncMetadata(
           schemaVersion: 1,
-          ownerUserId: _ownerUserId,
+          ownerUserId: _authRepository.ownerUserId,
           updatedAt: DateTime.now().toIso8601String(),
           rev: 'rev_${DateTime.now().millisecondsSinceEpoch}',
           deletedAt: null,
-          deviceId: _deviceId,
+          deviceId: _authRepository.deviceId,
         ),
       );
       await _store.upsertPersonaSnapshot(snapshot);
@@ -733,11 +738,11 @@ class _SessionScreenState extends State<SessionScreen> {
       roundsMax: 20,
       sync: SyncMetadata(
         schemaVersion: 1,
-        ownerUserId: _ownerUserId,
+        ownerUserId: _authRepository.ownerUserId,
         updatedAt: DateTime.now().toIso8601String(),
         rev: 'rev_${DateTime.now().millisecondsSinceEpoch}',
         deletedAt: null,
-        deviceId: _deviceId,
+        deviceId: _authRepository.deviceId,
       ),
     );
 
@@ -758,11 +763,11 @@ class _SessionScreenState extends State<SessionScreen> {
       createdAt: DateTime.now().toIso8601String(),
       sync: SyncMetadata(
         schemaVersion: 1,
-        ownerUserId: _ownerUserId,
+        ownerUserId: _authRepository.ownerUserId,
         updatedAt: DateTime.now().toIso8601String(),
         rev: 'rev_${DateTime.now().millisecondsSinceEpoch}',
         deletedAt: null,
-        deviceId: _deviceId,
+        deviceId: _authRepository.deviceId,
       ),
     );
 
@@ -783,11 +788,11 @@ class _SessionScreenState extends State<SessionScreen> {
       createdAt: DateTime.now().toIso8601String(),
       sync: SyncMetadata(
         schemaVersion: 1,
-        ownerUserId: _ownerUserId,
+        ownerUserId: _authRepository.ownerUserId,
         updatedAt: DateTime.now().toIso8601String(),
         rev: 'rev_${DateTime.now().millisecondsSinceEpoch}',
         deletedAt: null,
-        deviceId: _deviceId,
+        deviceId: _authRepository.deviceId,
       ),
     );
 
