@@ -130,5 +130,64 @@ void main() {
       expect(retrieved!.endedReason, 'user_action');
       expect(retrieved.sync.rev, 'rev_002');
     });
+
+    // M2-E5: PersonaSnapshot のテスト
+    test('PersonaSnapshot 保存と復元', () async {
+      final sync = SyncMetadata(
+        schemaVersion: 1,
+        ownerUserId: 'test_user',
+        updatedAt: '2026-02-04T00:00:00Z',
+        rev: 'rev_001',
+        deletedAt: null,
+        deviceId: 'test_device',
+      );
+
+      // Session 保存
+      final session = SessionEntity(
+        sessionId: 'session_snapshot_test',
+        createdAt: '2026-02-04T00:00:00Z',
+        theme: 'スナップショットテスト',
+        participants: [
+          {'persona_id': 'p1', 'seat': 0},
+          {'persona_id': 'p2', 'seat': 1},
+        ],
+        roundsMax: 10,
+        sync: sync,
+      );
+      await store.upsertSession(session);
+
+      // PersonaSnapshot 保存
+      final snapshot1 = PersonaSnapshotEntity(
+        snapshotId: 'snap_001',
+        sessionId: 'session_snapshot_test',
+        personaId: 'p1',
+        personaVersion: 1,
+        definitionJson: {'name': 'ペルソナ1', 'stance': '立場1'},
+        sync: sync,
+      );
+      await store.upsertPersonaSnapshot(snapshot1);
+
+      final snapshot2 = PersonaSnapshotEntity(
+        snapshotId: 'snap_002',
+        sessionId: 'session_snapshot_test',
+        personaId: 'p2',
+        personaVersion: 1,
+        definitionJson: {'name': 'ペルソナ2', 'stance': '立場2'},
+        sync: sync,
+      );
+      await store.upsertPersonaSnapshot(snapshot2);
+
+      // 復元確認
+      final snapshots =
+          await store.listPersonaSnapshotsBySession('session_snapshot_test');
+      expect(snapshots.length, 2);
+      expect(snapshots[0].personaId, anyOf('p1', 'p2'));
+      expect(snapshots[1].personaId, anyOf('p1', 'p2'));
+
+      // 個別取得確認
+      final retrieved1 = await store.getPersonaSnapshot('snap_001');
+      expect(retrieved1, isNotNull);
+      expect(retrieved1!.definitionJson['name'], 'ペルソナ1');
+    });
   });
 }

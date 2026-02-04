@@ -64,6 +64,17 @@ class L10nJa {
   static const String errorGeneric = 'エラーが発生しました';
   static const String errorRecoveryHint = '再試行するか、セッションを中断できます';
 
+  // 履歴画面（M2-E5 で追加）
+  static const String stateHistory = 'セッション履歴';
+  static const String buttonHistory = '履歴';
+  static const String descHistory = '過去のセッションを選択して復元できます';
+  static const String labelSessionTheme = 'テーマ';
+  static const String labelSessionUpdated = '更新日時';
+  static const String labelSessionStatus = '状態';
+  static const String statusOngoing = '進行中';
+  static const String statusEnded = '終了';
+  static const String descHistoryEmpty = 'セッション履歴はありません';
+
   // M1以降で追加
   // static const String errorNetwork = 'ネットワークエラーが発生しました';
 }

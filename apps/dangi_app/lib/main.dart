@@ -66,6 +66,9 @@ class _SessionScreenState extends State<SessionScreen> {
   final String _deviceId = 'mvp_device';
   int _turnIndex = 0;
 
+  // M2-E5: 履歴表示フラグ
+  bool _showingHistory = false;
+
   @override
   void initState() {
     super.initState();
@@ -114,7 +117,8 @@ class _SessionScreenState extends State<SessionScreen> {
       case SessionState.boot:
         return _buildBootScreen();
       case SessionState.idle:
-        return _buildIdleScreen();
+        // M2-E5: 履歴表示中は履歴画面を表示
+        return _showingHistory ? _buildHistoryScreen() : _buildIdleScreen();
       case SessionState.themeInput:
         return _buildThemeInputScreen();
       case SessionState.personaSelect:
@@ -200,6 +204,12 @@ class _SessionScreenState extends State<SessionScreen> {
           _buildActionButton(
             label: L10nJa.buttonStart,
             onPressed: () => _transition(SessionEvent.themeSubmitted),
+          ),
+          const SizedBox(height: UITokens.spacingMd),
+          // M2-E5: 履歴ボタン
+          _buildActionButton(
+            label: L10nJa.buttonHistory,
+            onPressed: () => setState(() => _showingHistory = true),
           ),
         ],
       ),
@@ -679,10 +689,37 @@ class _SessionScreenState extends State<SessionScreen> {
 
   // ========== M2-E4: 永続化ヘルパー ==========
 
-  /// セッション開始時の保存（Session エンティティ作成）
+  /// セッション開始時の保存（Session + PersonaSnapshot エンティティ作成）
   Future<void> _saveSessionStart(String theme) async {
     _currentSessionId = 'session_${DateTime.now().millisecondsSinceEpoch}';
     _turnIndex = 0;
+
+    // M2-E5: PersonaSnapshot 保存（MVP: 固定3名）
+    final personas = PersonaRepository.instance.getAll();
+    for (int i = 0; i < personas.length && i < 3; i++) {
+      final persona = personas[i];
+      final snapshot = PersonaSnapshotEntity(
+        snapshotId: 'snapshot_${_currentSessionId}_${persona.id}',
+        sessionId: _currentSessionId!,
+        personaId: persona.id,
+        personaVersion: 1, // MVP: 固定
+        definitionJson: {
+          'id': persona.id,
+          'name': persona.name,
+          'category': persona.category.toString(),
+          'stance': persona.stance,
+        },
+        sync: SyncMetadata(
+          schemaVersion: 1,
+          ownerUserId: _ownerUserId,
+          updatedAt: DateTime.now().toIso8601String(),
+          rev: 'rev_${DateTime.now().millisecondsSinceEpoch}',
+          deletedAt: null,
+          deviceId: _deviceId,
+        ),
+      );
+      await _store.upsertPersonaSnapshot(snapshot);
+    }
 
     final session = SessionEntity(
       sessionId: _currentSessionId!,
@@ -804,6 +841,171 @@ class _SessionScreenState extends State<SessionScreen> {
         _machine.transition(SessionEvent.themeSubmitted);
         _machine.transition(SessionEvent.personasSelected);
         _machine.transition(SessionEvent.sessionStarted);
+      }
+    });
+  }
+
+  // ========== M2-E5: 履歴画面 ==========
+
+  /// 履歴一覧画面
+  Widget _buildHistoryScreen() {
+    return Padding(
+      padding: const EdgeInsets.all(UITokens.spacingLg),
+      child: Column(
+        children: [
+          // ヘッダー
+          Row(
+            children: [
+              IconButton(
+                icon: Icon(Icons.arrow_back, color: UITokens.colorAccent),
+                onPressed: () => setState(() => _showingHistory = false),
+              ),
+              Text(
+                L10nJa.stateHistory,
+                style: TextStyle(
+                  fontSize: 24,
+                  color: UITokens.colorAccent,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: UITokens.spacingMd),
+          Text(
+            L10nJa.descHistory,
+            style: TextStyle(
+              fontSize: 14,
+              color: UITokens.colorAccent.withAlpha(153),
+            ),
+          ),
+          const SizedBox(height: UITokens.spacingLg),
+
+          // セッション一覧
+          Expanded(
+            child: FutureBuilder<List<SessionEntity>>(
+              future: _loadSessions(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(child: CircularProgressIndicator());
+                }
+
+                final sessions = snapshot.data!;
+                if (sessions.isEmpty) {
+                  return Center(
+                    child: Text(
+                      L10nJa.descHistoryEmpty,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: UITokens.colorAccent.withAlpha(153),
+                      ),
+                    ),
+                  );
+                }
+
+                return ListView.builder(
+                  itemCount: sessions.length,
+                  itemBuilder: (context, index) {
+                    final session = sessions[index];
+                    return _buildSessionItem(session);
+                  },
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// セッション一覧の読込（updated_at降順）
+  Future<List<SessionEntity>> _loadSessions() async {
+    final sessions = await _store.listSessions();
+    sessions.sort((a, b) => b.sync.updatedAt.compareTo(a.sync.updatedAt));
+    return sessions;
+  }
+
+  /// セッション項目ウィジェット
+  Widget _buildSessionItem(SessionEntity session) {
+    final status =
+        session.endedReason == null ? L10nJa.statusOngoing : L10nJa.statusEnded;
+
+    return InkWell(
+      onTap: () => _restoreSession(session.sessionId),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: UITokens.spacingMd),
+        decoration: BoxDecoration(
+          border: Border.all(color: UITokens.colorAccent.withAlpha(77)),
+          borderRadius: BorderRadius.circular(UITokens.radiusMd),
+        ),
+        padding: const EdgeInsets.all(UITokens.spacingMd),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              session.theme,
+              style: TextStyle(
+                fontSize: 18,
+                color: UITokens.colorAccent,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: UITokens.spacingSm),
+            Text(
+              '${L10nJa.labelSessionUpdated}: ${session.sync.updatedAt}',
+              style: TextStyle(
+                fontSize: 14,
+                color: UITokens.colorAccent.withAlpha(153),
+              ),
+            ),
+            const SizedBox(height: UITokens.spacingSm),
+            Text(
+              '${L10nJa.labelSessionStatus}: $status',
+              style: TextStyle(
+                fontSize: 14,
+                color: UITokens.colorAccent.withAlpha(153),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// セッション復元（履歴から選択時）
+  Future<void> _restoreSession(String sessionId) async {
+    final session = await _store.getSession(sessionId);
+    if (session == null) return;
+
+    _currentSessionId = sessionId;
+
+    // メッセージ復元
+    final messages = await _store.listMessagesBySession(sessionId);
+    messages.sort((a, b) => a.turnIndex.compareTo(b.turnIndex));
+
+    setState(() {
+      _showingHistory = false;
+      _messages.clear();
+      for (final msg in messages) {
+        _messages.add('${msg.speakerId}：${msg.text}');
+      }
+      _turnIndex = messages.length;
+
+      // 状態遷移
+      if (session.endedReason == null) {
+        // 未終了 → discussion へ
+        if (_machine.current == SessionState.idle) {
+          _machine.transition(SessionEvent.themeSubmitted);
+          _machine.transition(SessionEvent.personasSelected);
+          _machine.transition(SessionEvent.sessionStarted);
+        }
+      } else {
+        // 終了済み → convergence へ（Crystal があれば）
+        // TODO: M2-E5では最小実装として discussion へ遷移
+        if (_machine.current == SessionState.idle) {
+          _machine.transition(SessionEvent.themeSubmitted);
+          _machine.transition(SessionEvent.personasSelected);
+          _machine.transition(SessionEvent.sessionStarted);
+        }
       }
     });
   }
