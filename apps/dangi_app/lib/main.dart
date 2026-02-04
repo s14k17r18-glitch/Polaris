@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:ui_tokens/ui_tokens.dart';
 import 'package:l10n_ja/l10n_ja.dart';
 import 'package:shared_core/shared_core.dart';
+import 'storage/file_local_store.dart';
 
 void main() {
   runApp(const DangiApp());
@@ -56,24 +57,42 @@ class _SessionScreenState extends State<SessionScreen> {
   // M1-D4: Crystal Draft（結晶化画面で表示）
   CrystalDraft? _crystalDraft;
 
+  // M2-E4: 永続化ストア
+  final FileLocalStore _store = FileLocalStore();
+
+  // M2-E4: 現在のセッションID（MVP: 固定値）
+  String? _currentSessionId;
+  final String _ownerUserId = 'mvp_user';
+  final String _deviceId = 'mvp_device';
+  int _turnIndex = 0;
+
   @override
   void initState() {
     super.initState();
     // BOOT → IDLE への自動遷移（アプリ起動完了）
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       _transition(SessionEvent.appStarted);
+      // M2-E4: 最新セッション復元
+      await _restoreLatestSession();
     });
   }
 
   @override
   void dispose() {
     _streamSubscription?.cancel();
+    _store.close();
     super.dispose();
   }
 
   /// イベントを発火して状態遷移
-  void _transition(SessionEvent event) {
+  void _transition(SessionEvent event) async {
     if (_machine.canTransition(event)) {
+      // M2-E4: セッション終了時の保存
+      if (event == SessionEvent.sessionEnded &&
+          _machine.current == SessionState.dissolution) {
+        await _saveSessionEnd('user_action');
+      }
+
       setState(() {
         _machine.transition(event);
       });
@@ -102,7 +121,9 @@ class _SessionScreenState extends State<SessionScreen> {
         return _buildNotImplementedScreen(L10nJa.statePersonaSelect);
       case SessionState.ignition:
         // ignition → discussion の自動遷移（M1-D2）
-        WidgetsBinding.instance.addPostFrameCallback((_) {
+        WidgetsBinding.instance.addPostFrameCallback((_) async {
+          // M2-E4: セッション開始時の保存
+          await _saveSessionStart('テスト議題');
           _transition(SessionEvent.sessionStarted);
         });
         return _buildNotImplementedScreen(L10nJa.stateIgnition);
@@ -381,6 +402,10 @@ class _SessionScreenState extends State<SessionScreen> {
           // ストリーム完了時
           if (chunk.isComplete) {
             _messages.add('${chunk.speakerName}：$_currentMessage');
+
+            // M2-E4: メッセージ保存
+            _saveMessage(chunk.speakerName, _currentMessage);
+
             _currentMessage = '';
             _isStreaming = false;
 
@@ -399,7 +424,7 @@ class _SessionScreenState extends State<SessionScreen> {
   }
 
   /// 結論トリガーハンドラ（M1-D2, M1-D4で拡張）
-  void _handleConclusion() {
+  void _handleConclusion() async {
     // M1-D4: Crystal Draft を生成
     if (_conversationEngine != null) {
       setState(() {
@@ -410,6 +435,11 @@ class _SessionScreenState extends State<SessionScreen> {
           turnCount: _conversationEngine!.currentTurnIndex,
         );
       });
+
+      // M2-E4: Crystal 保存
+      if (_crystalDraft != null) {
+        await _saveCrystal(_crystalDraft!);
+      }
     }
 
     _transition(SessionEvent.conclusionTriggered);
@@ -645,5 +675,136 @@ class _SessionScreenState extends State<SessionScreen> {
   /// エラー中断ハンドラ（M1-B3）
   void _handleErrorAbort() {
     _transition(SessionEvent.sessionEnded);
+  }
+
+  // ========== M2-E4: 永続化ヘルパー ==========
+
+  /// セッション開始時の保存（Session エンティティ作成）
+  Future<void> _saveSessionStart(String theme) async {
+    _currentSessionId = 'session_${DateTime.now().millisecondsSinceEpoch}';
+    _turnIndex = 0;
+
+    final session = SessionEntity(
+      sessionId: _currentSessionId!,
+      createdAt: DateTime.now().toIso8601String(),
+      theme: theme,
+      participants: [
+        {'persona_id': 'p1', 'seat': 0},
+        {'persona_id': 'p2', 'seat': 1},
+        {'persona_id': 'p3', 'seat': 2},
+      ],
+      roundsMax: 20,
+      sync: SyncMetadata(
+        schemaVersion: 1,
+        ownerUserId: _ownerUserId,
+        updatedAt: DateTime.now().toIso8601String(),
+        rev: 'rev_${DateTime.now().millisecondsSinceEpoch}',
+        deletedAt: null,
+        deviceId: _deviceId,
+      ),
+    );
+
+    await _store.upsertSession(session);
+  }
+
+  /// ターン完了時の保存（Message エンティティ作成）
+  Future<void> _saveMessage(String speakerName, String text) async {
+    if (_currentSessionId == null) return;
+
+    final message = MessageEntity(
+      messageId: 'msg_${DateTime.now().millisecondsSinceEpoch}',
+      sessionId: _currentSessionId!,
+      turnIndex: _turnIndex,
+      speakerType: 'persona',
+      speakerId: speakerName,
+      text: text,
+      createdAt: DateTime.now().toIso8601String(),
+      sync: SyncMetadata(
+        schemaVersion: 1,
+        ownerUserId: _ownerUserId,
+        updatedAt: DateTime.now().toIso8601String(),
+        rev: 'rev_${DateTime.now().millisecondsSinceEpoch}',
+        deletedAt: null,
+        deviceId: _deviceId,
+      ),
+    );
+
+    await _store.upsertMessage(message);
+    _turnIndex++;
+  }
+
+  /// Crystal 生成時の保存（Crystal エンティティ作成）
+  Future<void> _saveCrystal(CrystalDraft draft) async {
+    if (_currentSessionId == null) return;
+
+    final crystal = CrystalEntity(
+      crystalId: 'crystal_${DateTime.now().millisecondsSinceEpoch}',
+      sessionId: _currentSessionId!,
+      summaryText: draft.summary,
+      heatScore: 0.7, // MVP: 固定値
+      color: 'blue', // MVP: 固定値
+      createdAt: DateTime.now().toIso8601String(),
+      sync: SyncMetadata(
+        schemaVersion: 1,
+        ownerUserId: _ownerUserId,
+        updatedAt: DateTime.now().toIso8601String(),
+        rev: 'rev_${DateTime.now().millisecondsSinceEpoch}',
+        deletedAt: null,
+        deviceId: _deviceId,
+      ),
+    );
+
+    await _store.upsertCrystal(crystal);
+  }
+
+  /// セッション終了時の保存（Session エンティティ更新）
+  Future<void> _saveSessionEnd(String endedReason) async {
+    if (_currentSessionId == null) return;
+
+    final existing = await _store.getSession(_currentSessionId!);
+    if (existing != null) {
+      final updated = existing.copyWith(
+        endedReason: endedReason,
+        sync: existing.sync.copyWith(
+          updatedAt: DateTime.now().toIso8601String(),
+          rev: 'rev_${DateTime.now().millisecondsSinceEpoch}',
+        ),
+      );
+      await _store.upsertSession(updated);
+    }
+  }
+
+  /// アプリ起動時の復元（最新Session読込）
+  Future<void> _restoreLatestSession() async {
+    final sessions = await _store.listSessions();
+    if (sessions.isEmpty) return;
+
+    // 最新セッション取得（updated_at最大）
+    sessions.sort((a, b) => b.sync.updatedAt.compareTo(a.sync.updatedAt));
+    final latest = sessions.first;
+
+    // セッションが終了していない場合のみ復元
+    if (latest.endedReason != null) return;
+
+    _currentSessionId = latest.sessionId;
+
+    // メッセージ復元
+    final messages = await _store.listMessagesBySession(latest.sessionId);
+    messages.sort((a, b) => a.turnIndex.compareTo(b.turnIndex));
+
+    setState(() {
+      _messages.clear();
+      for (final msg in messages) {
+        _messages.add('${msg.speakerId}：${msg.text}');
+      }
+      _turnIndex = messages.length;
+
+      // discussion 状態へ復帰
+      if (_machine.current == SessionState.idle) {
+        _machine.transition(SessionEvent.themeSubmitted);
+        _machine.transition(SessionEvent.personasSelected);
+        _machine.transition(SessionEvent.sessionStarted);
+      }
+    });
   }
 }
