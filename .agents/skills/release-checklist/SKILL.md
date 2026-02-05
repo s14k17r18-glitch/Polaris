@@ -1,0 +1,56 @@
+---
+name: release-checklist
+description: Use for release tasks: checklist, signing/registration boundaries, user-required steps.
+---
+# Purpose
+This skill encodes the project's working agreement and should be used when relevant.
+
+# Instructions
+- Follow the rules exactly.
+- If the user's request conflicts with these rules, stop and explain the conflict, then propose the compliant alternative.
+- Keep changes minimal and aligned with the MVP scope.
+
+# Source (cloudcode/.claude)
+This skill was derived from: .claude/rules/40-release.md
+
+# Rules (verbatim / adapted)
+
+> BEGIN SOURCE
+> # skill_release.md（ビルド/配布/リリースの考え方）
+> 完成に近づいた段階で「最後に詰む」を防ぐための手順ガイド。
+> 
+> ---
+> 
+> ## 目的
+> - Windows / iOS でビルドが通り、配布できる状態にする
+> - 署名/証明書/ストア作業は外部入力が絡むため、必ずユーザーと協業する
+> 
+> ---
+> 
+> ## 原則
+> - 署名・証明書・ストア登録・課金・規約同意などは **ユーザー操作が必要**
+> - Claude Code は手順を整理し、必要ファイルや設定項目を準備するところまで担当する
+> 
+> ---
+> 
+> ## リリース前チェック（最低限）
+> - 起動テスト（Windows/iOS）
+> - セッション完走（M1）
+> - 保存/復元（M2）
+> - 同期（M3：12_SYNC_API_SPEC準拠）
+> - 日本語固定（UI/エラー/ユーザー可視ログ）
+> - 既知の制限が docs に残っている
+> 
+> ---
+> 
+> ## 外部入力が必要になったら（必ず停止）
+> - Apple Developer / Microsoft 開発者登録
+> - 証明書/プロビジョニング
+> - App Store / Microsoft Store 登録
+> - APIキー/Secret登録
+> 
+> 停止時に出すもの：
+> - どの画面で何を入力するか（スクリーン名）
+> - 入力値の種類（キー/ID/Bundle ID等）
+> - 入力後に再開する作業の続き
+> END SOURCE
