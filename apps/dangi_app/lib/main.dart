@@ -140,6 +140,10 @@ class _SessionScreenState extends State<SessionScreen> {
         return _buildDiscussionScreen();
       case SessionState.convergence:
         return _buildConvergenceScreen();
+      case SessionState.crystallization:
+        return _buildCrystallizationScreen();
+      case SessionState.dissolution:
+        return _buildDissolutionScreen();
       case SessionState.error:
         return _buildErrorScreen();
       default:
@@ -440,28 +444,65 @@ class _SessionScreenState extends State<SessionScreen> {
 
   /// 結論トリガーハンドラ（M1-D2, M1-D4で拡張）
   void _handleConclusion() async {
+    setState(() {
+      _crystalDraft = null;
+    });
+
+    // まず結論収束（生成中）へ
+    _transition(SessionEvent.conclusionTriggered);
+
     // M1-D4: Crystal Draft を生成
     if (_conversationEngine != null) {
-      setState(() {
-        _crystalDraft = SummaryCrystal.generateCrystalDraft(
-          theme: 'テスト議題', // TODO: M1で実装時に実際のテーマを渡す
-          messages: _messages,
-          participants: PersonaRepository.instance.getAll(),
-          turnCount: _conversationEngine!.currentTurnIndex,
-        );
-      });
+      final draft = SummaryCrystal.generateCrystalDraft(
+        theme: 'テスト議題', // TODO: M1で実装時に実際のテーマを渡す
+        messages: _messages,
+        participants: PersonaRepository.instance.getAll(),
+        turnCount: _conversationEngine!.currentTurnIndex,
+      );
 
       // M2-E4: Crystal 保存
-      if (_crystalDraft != null) {
-        await _saveCrystal(_crystalDraft!);
-      }
-    }
+      await _saveCrystal(draft);
 
-    _transition(SessionEvent.conclusionTriggered);
+      if (!mounted) return;
+      setState(() {
+        _crystalDraft = draft;
+      });
+      _transition(SessionEvent.crystalGenerated);
+    }
+  }
+
+  /// 結論収束画面（生成中）
+  Widget _buildConvergenceScreen() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const CircularProgressIndicator(),
+          const SizedBox(height: UITokens.spacingMd),
+          Text(
+            L10nJa.stateConvergence,
+            style: TextStyle(
+              fontSize: 20,
+              color: UITokens.colorAccent,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: UITokens.spacingSm),
+          Text(
+            L10nJa.descConvergence,
+            style: TextStyle(
+              fontSize: 14,
+              color: UITokens.colorAccent.withAlpha(153),
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
   }
 
   /// 結晶化画面（M1-D4）
-  Widget _buildConvergenceScreen() {
+  Widget _buildCrystallizationScreen() {
     if (_crystalDraft == null) {
       return Center(
         child: Text(
@@ -480,7 +521,7 @@ class _SessionScreenState extends State<SessionScreen> {
         children: [
           // ヘッダー
           Text(
-            L10nJa.stateConvergence,
+            L10nJa.stateCrystallization,
             style: TextStyle(
               fontSize: 24,
               color: UITokens.colorAccent,
@@ -489,7 +530,7 @@ class _SessionScreenState extends State<SessionScreen> {
           ),
           const SizedBox(height: UITokens.spacingMd),
           Text(
-            L10nJa.descConvergence,
+            L10nJa.descCrystallization,
             style: TextStyle(
               fontSize: 14,
               color: UITokens.colorAccent.withAlpha(153),
@@ -551,6 +592,39 @@ class _SessionScreenState extends State<SessionScreen> {
           // アクションボタン
           _buildActionButton(
             label: L10nJa.buttonToHistory,
+            onPressed: () => _transition(SessionEvent.sessionEnded),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 解散画面
+  Widget _buildDissolutionScreen() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            L10nJa.stateDissolution,
+            style: TextStyle(
+              fontSize: 24,
+              color: UITokens.colorAccent,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: UITokens.spacingMd),
+          Text(
+            L10nJa.descDissolution,
+            style: TextStyle(
+              fontSize: 14,
+              color: UITokens.colorAccent.withAlpha(153),
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: UITokens.spacingLg),
+          _buildActionButton(
+            label: L10nJa.buttonToTop,
             onPressed: () => _transition(SessionEvent.sessionEnded),
           ),
         ],

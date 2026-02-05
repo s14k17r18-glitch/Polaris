@@ -3,6 +3,31 @@ import 'package:shared_core/shared_core.dart';
 
 void main() {
   group('SessionMachine', () {
+    group('正常遷移（M1-D4）', () {
+      test('discussion → convergence → crystallization → dissolution → idle', () {
+        final machine = SessionMachine();
+        machine.transition(SessionEvent.appStarted);
+        machine.transition(SessionEvent.themeSubmitted);
+        machine.transition(SessionEvent.themeSubmitted);
+        machine.transition(SessionEvent.personasSelected);
+        machine.transition(SessionEvent.sessionStarted);
+
+        expect(machine.current, SessionState.discussion);
+
+        machine.transition(SessionEvent.conclusionTriggered);
+        expect(machine.current, SessionState.convergence);
+
+        machine.transition(SessionEvent.crystalGenerated);
+        expect(machine.current, SessionState.crystallization);
+
+        machine.transition(SessionEvent.sessionEnded);
+        expect(machine.current, SessionState.dissolution);
+
+        machine.transition(SessionEvent.sessionEnded);
+        expect(machine.current, SessionState.idle);
+      });
+    });
+
     group('エラー遷移（M1-B3）', () {
       test('error 状態へ遷移できる', () {
         final machine = SessionMachine();
