@@ -19,6 +19,8 @@
 - Issue がクローズされたら Done に移動する。
 
 ## フィールド運用（推奨）
+- **MilestonePhase**: M0〜M5（Projects用の単一選択）
+- ※ GitHub標準の Milestone フィールドとは別で運用する
 - **Milestone**: M0〜M5（既存Milestoneがある場合は適宜合わせる）
 - **Area**: shared_core / ui / gesture / storage / sync / infra / ci / test / docs
 - **Priority**: P0〜P3
