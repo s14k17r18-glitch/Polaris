@@ -44,3 +44,8 @@
 - `release-checklist`：リリース前チェックとユーザー入力境界
 - `parity-style`：共通コア優先とOS差異の抑制
 
+
+## Context continuity (must)
+- Use `$handoff-memory` when the session becomes long, when switching threads, and after major decisions.
+- Default rule: after each meaningful commit, append an entry to `docs/handoff/LOG.md`.
+- Before starting a new thread/session: read `docs/HANDOFF.md` first, then continue from “Next single action”.
