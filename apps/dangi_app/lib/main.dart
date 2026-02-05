@@ -146,8 +146,6 @@ class _SessionScreenState extends State<SessionScreen> {
         return _buildDissolutionScreen();
       case SessionState.error:
         return _buildErrorScreen();
-      default:
-        return _buildNotImplementedScreen(_machine.current.displayName);
     }
   }
 

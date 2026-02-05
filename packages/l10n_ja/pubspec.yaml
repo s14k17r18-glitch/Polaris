@@ -3,6 +3,8 @@ description: 日本語文言（ユーザー可視はここだけ）
 version: 0.1.0
 publish_to: none
 
+resolution: workspace
+
 environment:
   sdk: ">=3.6.0 <4.0.0"
 

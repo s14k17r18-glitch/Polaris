@@ -1,10 +1,10 @@
 # DEV_STATUS
 
-## Outer (Hokyoksei)
-# Outer (Hokyoksei)
+## Outer (archived repo)
+# Outer (archived repo)
 /mnt/d/PROJECT/DanGi
-origin	https://github.com/s14k17r18-glitch/Hokyoksei.git (fetch)
-origin	https://github.com/s14k17r18-glitch/Hokyoksei.git (push)
+origin	https://github.com/s14k17r18-glitch/archived-repo.git (fetch)
+origin	https://github.com/s14k17r18-glitch/archived-repo.git (push)
 main
  M .claude/CLAUDE.md
  M .claude/rules/25-autofix-loop.md
