@@ -1,58 +1,39 @@
 ---
 name: runloop
-description: Use when planning/executing work: enforce one-item-per-run, fixed order, and stop on spec gaps.
+description: 作業の進め方を固定する。1回1項目、順序厳守、仕様の空白は停止。runloop/チェックリスト/宣言
 ---
 # Purpose
-This skill encodes the project's working agreement and should be used when relevant.
+実装が迷走しないように、作業の順序と範囲を固定し、MVPとパリティを守るための運用ルールを徹底する。
 
-# Instructions
-- Follow the rules exactly.
-- If the user's request conflicts with these rules, stop and explain the conflict, then propose the compliant alternative.
-- Keep changes minimal and aligned with the MVP scope.
+# When to use
+- 実装や修正を始めるとき
+- どのチェック項目に着手するか決めるとき
+- 仕様の空白や矛盾が見つかったとき
 
-# Source (cloudcode/.claude)
-This skill was derived from: .claude/rules/10-runloop.md
+# When NOT to use
+- 単なる情報提示や雑談のみで、コードや設定を変えないとき
+- ユーザーが明示的に「作業を進めないで」と指示しているとき
 
-# Rules (verbatim / adapted)
+# Procedure
+1. `docs/09_IMPLEMENTATION_PLAN.md` から未完了の1項目だけ選ぶ。
+2. 実装前に「対象ID・変更ファイル・テスト計画」を宣言する。
+3. 最小変更で実装する。
+4. テストを実行する。失敗したら修正→再テストを繰り返す。
+5. 差分要約と次の候補を報告する。
 
-> BEGIN SOURCE
-> # skill_runloop.md（実行ループ：迷わない進め方）
-> Claude Code が「順番迷子」にならないための実行ルール。
-> 
-> ---
-> 
-> ## ゴール
-> - `docs/09_IMPLEMENTATION_PLAN.md` のチェックリストを **上から順に潰していく**
-> - 1回の作業で進めるのは **未完了の1項目だけ**
-> - 必ずテストし、NGなら直して再テスト（OKまで）
-> 
-> ---
-> 
-> ## 毎回の手順（固定）
-> 1) 対象チェック項目を1つ選ぶ（未完了）
-> 2) 実装前宣言（必須）
->    - 対象チェック項目ID
->    - 変更ファイル一覧（予告）
->    - テスト計画（最低：Windows/iOS起動）
-> 3) 実装
-> 4) テスト
-> 5) NGなら修正→再テスト（OKまで繰り返し）
-> 6) 差分要約（git diff要約）
-> 7) コミット→push→PR作成
-> 
-> ---
-> 
-> ## 迷ったらこれ（強制）
-> - UIを先に作らない。必ず **共通コア→状態遷移→保存→同期→UI** の順で。
-> - docs に矛盾/空白があるなら勝手に決めず停止して、選択肢＋推奨＋理由を提示。
-> - 例外が必要なら `docs/00_PARITY_CONTRACT.md` の「例外申請」に従う。
-> 
-> ---
-> 
-> ## 成果物の品質ゲート（最低ライン）
-> - Windows/iOSで起動できる
-> - 主要画面遷移ができる
-> - セッション完走（M1以降）
-> - 保存/復元（M2以降）
-> - 同期の契約準拠（M3以降）
-> END SOURCE
+Checklist:
+- [ ] 1回の作業で進めるのは1項目だけ
+- [ ] 仕様に穴があれば停止して確認
+- [ ] 共通コア→状態遷移→保存→同期→UIの順序を守る
+
+# Constraints
+- MVP範囲外の機能は実装しない。
+- 仕様の空白は推測で埋めない。
+- パリティ契約に反する変更は禁止。
+
+# Output expectations
+- 実装前宣言（対象ID / 変更ファイル / テスト計画）
+- 実装後の差分要約とテスト結果
+
+# Sources
+- Derived from: `.claude/rules/10-runloop.md`

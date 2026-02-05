@@ -1,75 +1,36 @@
 ---
 name: git-safety
-description: Use for any git/GitHub action: branch rules, no force, no direct main push, safe PR workflow.
+description: Git/GitHub 操作の安全ルール。main直push禁止、force禁止、featureブランチ運用。git/PR/branch
 ---
 # Purpose
-This skill encodes the project's working agreement and should be used when relevant.
+Git操作で履歴破壊やレビュー困難を防ぎ、安全に変更を届けるための運用ルールを徹底する。
 
-# Instructions
-- Follow the rules exactly.
-- If the user's request conflicts with these rules, stop and explain the conflict, then propose the compliant alternative.
-- Keep changes minimal and aligned with the MVP scope.
+# When to use
+- ブランチ作成、コミット、push、PR作成を行うとき
+- Git運用手順を決めるとき
 
-# Source (cloudcode/.claude)
-This skill was derived from: .claude/rules/20-git.md
+# When NOT to use
+- Git操作をしない純粋な読み取り作業のとき
 
-# Rules (verbatim / adapted)
+# Procedure
+1. `feature/<M#>-<topic>` のブランチを作成する。
+2. 変更確認は `git status` と `git diff` を必ず行う。
+3. 1コミット1目的でコミットする。
+4. push して PR を作成する。
 
-> BEGIN SOURCE
-> # skill_git.md（Git/GitHub運用）
-> Claude Code に Git/GitHub 操作を任せるための安全ルール。
-> 
-> ---
-> 
-> ## ブランチ
-> - main直push禁止
-> - `feature/<M#>-<topic>` で作る
->   - 例：`feature/M0-repo-skeleton` / `feature/M1-turn-streaming`
-> 
-> ---
-> 
-> ## コミット粒度
-> - 1コミット1目的（動く単位）
-> - コミット前に必ず確認：
->   - `git status`
->   - `git diff`
-> - 破壊的変更（スキーマ/マイグレーション）はコミットを分ける
-> 
-> ---
-> 
-> ## PRテンプレ（本文に貼る）
-> ### 対応したチェック項目
-> - [ ] （例）M1: D2 ターン生成（ストリーミング表示）
-> 
-> ### 変更概要
-> - 
-> 
-> ### テスト結果
-> - Windows起動：OK/NG（手順も）
-> - iOS起動：OK/NG（手順も）
-> - 自動テスト：OK/NG（実行コマンド）
-> 
-> ### 影響範囲
-> - data model / sync / UI / docs
-> 
-> ### 既知の制限
-> - 
-> 
-> ### 次の手
-> - 
-> 
-> ---
-> 
-> ## 禁止
-> - `git push --force` 禁止
-> - 勝手なrebase/履歴改変禁止
-> - 大量変更を1PRに詰めない（レビュー不能になる）
-> 
-> ---
-> 
-> ## 推奨コマンド例
-> - ブランチ作成：`git checkout -b feature/M1-xxx`
-> - 変更確認：`git status` / `git diff`
-> - コミット：`git commit -m "M1: xxxx"`
-> - push：`git push -u origin feature/M1-xxx`
-> END SOURCE
+Checklist:
+- [ ] `main` 直push禁止
+- [ ] `git push --force` 禁止
+- [ ] PR本文にチェック項目/テスト結果/影響範囲/既知の制限を書く
+
+# Constraints
+- 履歴改変（rebase等）を勝手にしない。
+- 大量変更を1PRに詰めない。
+
+# Output expectations
+- 使用したブランチ名
+- 実行したGitコマンドの要約
+- PR作成の有無と次の手
+
+# Sources
+- Derived from: `.claude/rules/20-git.md`

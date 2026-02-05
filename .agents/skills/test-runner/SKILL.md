@@ -1,61 +1,35 @@
 ---
 name: test-runner
-description: Use when changes are made: run required checks and document results; ensure parity constraints are met.
+description: 変更後の必須テスト手順と報告を固定化。Windows/iOS起動確認を含む。test/verify/report
 ---
 # Purpose
-This skill encodes the project's working agreement and should be used when relevant.
+変更による破壊を防ぐため、必須テストと報告形式を守る。
 
-# Instructions
-- Follow the rules exactly.
-- If the user's request conflicts with these rules, stop and explain the conflict, then propose the compliant alternative.
-- Keep changes minimal and aligned with the MVP scope.
+# When to use
+- 何らかの変更を加えたとき
+- テスト計画や結果報告が必要なとき
 
-# Source (cloudcode/.claude)
-This skill was derived from: .claude/rules/30-test.md
+# When NOT to use
+- 変更が一切ない読み取り/質問回答のみのとき
 
-# Rules (verbatim / adapted)
+# Procedure
+1. 起動テスト（Windows/iOS）を最優先で実施する。
+2. M1以降は縦スライス完走テストを実施する。
+3. 共通コア単体テストを可能な限り実施する。
+4. NGなら修正→再テストを繰り返す。
 
-> BEGIN SOURCE
-> # skill_test.md（テスト運用）
-> 「テスト忘れ」「直したつもりで壊す」を防ぐための固定手順。
-> 
-> ---
-> 
-> ## 原則
-> - 変更したら必ずテスト
-> - テストがNGなら、**テスト→修正→再テスト**をOKまで繰り返す
-> - “一部だけOK”で先に進まない（後で地獄）
-> 
-> ---
-> 
-> ## テストの優先順位
-> 1) 起動テスト（必須）  
->    - Windows：起動→主要画面遷移→クラッシュ無し  
->    - iOS：起動→主要画面遷移→クラッシュ無し
-> 2) 縦スライス統合（M1以降必須）  
->    - 1セッション完走（状態遷移が崩れない）
-> 3) 共通コア単体テスト（常に推奨）  
->    - データモデル（serialize/deserialize）
->    - 状態遷移（許可されない遷移が通らない）
->    - Sync差分生成（M3以降）
-> 4) 破壊的変更の検証  
->    - schema_version更新時：migrationがあるか
->    - 既存データが読めるか
-> 
-> ---
-> 
-> ## 外部のテスト（Web/拡張機能/オンラインツール）
-> 使ってよい。ただし以下は必ず守る：
-> - ログイン/登録/APIキー入力が必要なら **必ず停止してユーザー入力に委ねる**
-> - テスト結果は再現可能な形で残す（URL・手順・期待結果/実結果）
-> 
-> ---
-> 
-> ## 失敗時の報告フォーマット（必須）
-> - 失敗したテスト：
-> - 再現手順：
-> - 期待結果：
-> - 実結果（エラーログ/スクショ要約）：
-> - 推定原因：
-> - 修正方針：
-> END SOURCE
+Checklist:
+- [ ] Windows起動OK
+- [ ] iOS起動OK
+- [ ] 変更範囲に応じた追加テスト
+
+# Constraints
+- 外部ログインやAPIキー入力が必要なら必ず停止してユーザー依頼。
+- “一部OK”のまま次へ進まない。
+
+# Output expectations
+- 実行したテストと結果
+- 失敗時は再現手順・期待/実結果・原因・方針を報告
+
+# Sources
+- Derived from: `.claude/rules/30-test.md`
