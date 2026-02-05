@@ -49,3 +49,11 @@
 - Use `$handoff-memory` when the session becomes long, when switching threads, and after major decisions.
 - Default rule: after each meaningful commit, append an entry to `docs/handoff/LOG.md`.
 - Before starting a new thread/session: read `docs/HANDOFF.md` first, then continue from “Next single action”.
+
+## Memory questions (always)
+If the user asks things like 「覚えてる？」「覚えてますか？」「前回の続き」「何をやってたっけ？」,
+treat it as a request to resume this repo’s context:
+1) Read docs/HANDOFF.md first (snapshot).
+2) If needed, read the newest 3 entries from docs/handoff/LOG.md.
+3) Reply with: current goal + next single action + any blockers (short).
+
