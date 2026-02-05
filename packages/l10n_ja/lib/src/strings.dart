@@ -4,7 +4,7 @@ class L10nJa {
   L10nJa._(); // インスタンス化禁止
 
   // アプリ基本
-  static const String appTitle = '北極星（Hokyoksei）';
+  static const String appTitle = 'Polaris';
   static const String helloWorld = 'M0: 骨組み確認用 Hello World';
 
   // 状態表示（B2 で追加）

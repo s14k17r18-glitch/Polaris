@@ -1,5 +1,5 @@
-name: hokyoksei_workspace
-description: Hokyoksei monorepo (Windows + iOS)
+name: polaris_workspace
+description: Polaris monorepo (Windows + iOS)
 version: 0.1.0
 publish_to: none
 

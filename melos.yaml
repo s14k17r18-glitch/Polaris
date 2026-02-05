@@ -1,4 +1,4 @@
-name: hokyoksei
+name: polaris
 packages:
   - apps/**
   - packages/**
