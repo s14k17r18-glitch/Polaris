@@ -1,4 +1,5 @@
 # Handoff Log (Incremental)
+> NOTE: 今後の引き継ぎログの正本は `docs/handoff/LOG_QA.md` とする。
 
 このファイルは「都度の増分要約」を積み上げるログ。
 1エントリは短く（10〜20行程度）、“増分”だけを書く。
