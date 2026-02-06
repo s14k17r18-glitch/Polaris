@@ -1,26 +1,6 @@
 ---
 name: handoff-qa-logger
-description: |
-  引き継ぎログを「Q/A圧縮」で残すための運用スキル。
-  毎回、短い結果説明＋LOG貼付用Q/Aエントリをセットで出力する。
-compatibility:
-  codex: "*"
-license: MIT
-metadata:
-  canonical_log_file: docs/handoff/LOG_QA.md
-  park_file: docs/handoff/PARK.md
-  rules:
-    - "実装前宣言は不要。1ターン=Q/Aで記録"
-    - "Nextは必ず1つ"
-    - "脱線しそうな点はParkへ（実装修正は後）"
-  log_entry_template: |
-    ### [YYYY-MM-DD NN] Q/A
-    Q: <1行>
-    A:
-    - <要点1〜3行>
-    Meta: branch= commit= test=
-    Park: <1行>
-    Next: <1つ>
+description: Q/A圧縮で進捗をLOGに残し、脱線はPARKへ棚上げする運用スキル。
 ---
 
 # 目的
