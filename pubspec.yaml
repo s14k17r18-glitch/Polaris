@@ -38,3 +38,10 @@ melos:
     test:
       run: melos exec --dir-exists=test --concurrency=1 -- flutter test
       description: Run tests for all packages with test/ (sequential)
+
+    verify:
+      description: "Bootstrap + analyze + test (WSL/Windows共通の単一導線)"
+      run: |
+        melos bootstrap
+        melos analyze
+        melos run test
