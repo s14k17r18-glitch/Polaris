@@ -44,3 +44,12 @@ A:
 Meta: branch=feature/M0-todo-warnings commit=dd7c6a4 test=melos bootstrap+analyze+test
 Park: pub get 無出力の再発時はDNS/プロキシ/キャッシュの切り分けを実施
 Next: Windows/iOS起動確認が必要なら実施
+
+### [2026-02-06 05] Q/A
+Q: feature/M0-todo-warnings を main 向けにPR作成して共有する。
+A:
+- PRを作成（Base=main / Head=feature/M0-todo-warnings）
+- URL: https://github.com/s14k17r18-glitch/Polaris/pull/1
+Meta: branch=feature/M0-todo-warnings commit=5e60f42 test=melos run verify (pass)
+Park: Windows/iOS起動確認は未実施（必要なら実施して追記）
+Next: PR #1 のレビュー依頼を出し、必要ならWindows起動確認結果を追記
