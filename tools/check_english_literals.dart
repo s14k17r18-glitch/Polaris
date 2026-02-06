@@ -179,13 +179,24 @@ List<String> collectDartFiles(String rootPath) {
     }
 
     dir.listSync(recursive: true).forEach((entity) {
-      if (entity is File && entity.path.endsWith('.dart')) {
-        final path = entity.path.replaceAll('\\', '/');
+        if (entity is File && entity.path.endsWith('.dart')) {
+          final path = entity.path.replaceAll('\\', '/');
 
-        // 除外: test/ 配下
-        if (path.contains('/test/')) {
-          return;
-        }
+          // 除外: 生成物・ビルド成果物
+          if (path.contains('/.dart_tool/')) {
+            return;
+          }
+          if (path.contains('/build/')) {
+            return;
+          }
+          if (path.contains('/windows/flutter/ephemeral/')) {
+            return;
+          }
+
+          // 除外: test/ 配下
+          if (path.contains('/test/')) {
+            return;
+          }
 
         // 除外: 生成コード
         if (path.endsWith('.g.dart') || path.endsWith('.freezed.dart')) {

@@ -35,7 +35,8 @@ class FileLocalStore implements LocalStore {
   Future<void> _append(String filename, Map<String, dynamic> data) async {
     await _dir; // ディレクトリ初期化を保証
     final file = _getFile(filename);
-    final line = '${jsonEncode(data)}\n';
+    final encoded = jsonEncode(data);
+    final line = '$encoded' '\n';
     await file.writeAsString(line, mode: FileMode.append);
   }
 

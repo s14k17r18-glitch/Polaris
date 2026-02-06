@@ -1028,7 +1028,7 @@ class _SessionScreenState extends State<SessionScreen> {
             ),
             const SizedBox(height: UITokens.spacingSm),
             Text(
-              '${L10nJa.labelSessionUpdated}: ${session.sync.updatedAt}',
+              '${L10nJa.labelSessionUpdated}：${session.sync.updatedAt}',
               style: TextStyle(
                 fontSize: 14,
                 color: UITokens.colorAccent.withAlpha(153),
@@ -1036,7 +1036,7 @@ class _SessionScreenState extends State<SessionScreen> {
             ),
             const SizedBox(height: UITokens.spacingSm),
             Text(
-              '${L10nJa.labelSessionStatus}: $status',
+              '${L10nJa.labelSessionStatus}：$status',
               style: TextStyle(
                 fontSize: 14,
                 color: UITokens.colorAccent.withAlpha(153),
