@@ -398,7 +398,7 @@ class _SessionScreenState extends State<SessionScreen> {
   void _handleNextTurn() async {
     // ConversationEngine 初期化（初回のみ）
     _conversationEngine ??= ConversationEngine(
-      theme: 'テスト議題', // TODO: M1で実装時に実際のテーマを渡す
+      theme: 'テスト議題', // PLAN(M1): 実際のテーマ入力を渡す（POST_FIX_TODO参照）
       personas: PersonaRepository.instance.getAll(),
     );
 
@@ -435,7 +435,7 @@ class _SessionScreenState extends State<SessionScreen> {
         setState(() {
           _isStreaming = false;
         });
-        // TODO: エラーハンドリング（M1-B3 で実装）
+        // PLAN(M1-B3): エラーハンドリング（POST_FIX_TODO参照）
       },
     );
   }
@@ -452,7 +452,7 @@ class _SessionScreenState extends State<SessionScreen> {
     // M1-D4: Crystal Draft を生成
     if (_conversationEngine != null) {
       final draft = SummaryCrystal.generateCrystalDraft(
-        theme: 'テスト議題', // TODO: M1で実装時に実際のテーマを渡す
+        theme: 'テスト議題', // PLAN(M1): 実際のテーマ入力を渡す（POST_FIX_TODO参照）
         messages: _messages,
         participants: PersonaRepository.instance.getAll(),
         turnCount: _conversationEngine!.currentTurnIndex,
@@ -1077,7 +1077,7 @@ class _SessionScreenState extends State<SessionScreen> {
         }
       } else {
         // 終了済み → convergence へ（Crystal があれば）
-        // TODO: M2-E5では最小実装として discussion へ遷移
+        // PLAN(M2-E5): 最小実装として discussion へ遷移（POST_FIX_TODO参照）
         if (_machine.current == SessionState.idle) {
           _machine.transition(SessionEvent.themeSubmitted);
           _machine.transition(SessionEvent.personasSelected);
