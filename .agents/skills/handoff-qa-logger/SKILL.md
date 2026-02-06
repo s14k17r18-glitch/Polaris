@@ -1,29 +1,26 @@
 ---
-id: handoff-qa-logger
-name: 引き継ぎQ/A圧縮ログ（記録）
-version: 1.0.0
-status: active
-canonical_log_file: docs/handoff/LOG_QA.md
-park_file: docs/handoff/PARK.md
-constraints:
-  no_derailment: true
-  next_must_be_single: true
-  compact_lines_max: 15
-output_contract:
-  always_return:
-    - short_result_explanation
-    - log_md_qa_entry
-templates:
-  log_entry: |
-    ### [{{date}} {{seq}}] Q/A
-    Q: {{q_one_line}}
+name: handoff-qa-logger
+description: |
+  引き継ぎログを「Q/A圧縮」で残すための運用スキル。
+  毎回、短い結果説明＋LOG貼付用Q/Aエントリをセットで出力する。
+compatibility:
+  codex: "*"
+license: MIT
+metadata:
+  canonical_log_file: docs/handoff/LOG_QA.md
+  park_file: docs/handoff/PARK.md
+  rules:
+    - "実装前宣言は不要。1ターン=Q/Aで記録"
+    - "Nextは必ず1つ"
+    - "脱線しそうな点はParkへ（実装修正は後）"
+  log_entry_template: |
+    ### [YYYY-MM-DD NN] Q/A
+    Q: <1行>
     A:
-    - {{a_line_1}}
-    - 変更: {{changes}}（実装がある場合のみ）
-    - 検証: {{tests}}（実装がある場合のみ）
-    Meta: branch={{branch}} commit={{commit}} test={{test}}
-    Park: {{park_one_line}}
-    Next: {{next_single_action}}
+    - <要点1〜3行>
+    Meta: branch= commit= test=
+    Park: <1行>
+    Next: <1つ>
 ---
 
 # 目的
