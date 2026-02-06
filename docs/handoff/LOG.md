@@ -1,46 +1,15 @@
-# Handoff Log (Incremental)
-> NOTE: 今後の引き継ぎログの正本は `docs/handoff/LOG_QA.md` とする。
+# Handoff LOG（毎回更新：Q/A圧縮）
+- 1ターン=Q/Aペアで要点のみ（宣言不要）
+- 実装が絡む回だけ Meta（branch/commit/test）を後付け
+- 脱線は Park に退避（修正せず計画だけ）
+- Next は必ず1つ
 
-このファイルは「都度の増分要約」を積み上げるログ。
-1エントリは短く（10〜20行程度）、“増分”だけを書く。
-
----
-
-- Date (JST): 2026-02-06 12:04
-- Branch: feature/M0-todo-warnings
-- Commit: (pending)
-- Goal: main.dart の TODO 警告4件を解消し、計画へ移送
-- Changes:
-  - main.dart の TODO を PLAN コメントに置換
-  - TODO対応の計画を POST_FIX_TODO に追記
-  - melos run verify を実行
-- Decisions:
-  - TODO実装は行わず計画へ移送
-- Blockers / Questions:
-  - Windows/iOS起動確認はユーザー実行が必要
-- Next single action:
-  - 変更を1コミットで push する
-- Evidence (optional):
-  - melos run verify
-
-
-## Entry Template
-
-- Date (JST): YYYY-MM-DD HH:MM
-- Branch:
-- Commit:
-- Goal:
-- Changes:
-  - ...
-  - ...
-  - ...
-- Decisions:
-  - ...
-- Blockers / Questions:
-  - ...
-- Next single action:
-  - ...
-- Evidence (optional):
-  - ...
-
----
+<!-- テンプレ
+### [YYYY-MM-DD NN] Q/A
+Q: <1行>
+A:
+- <要点1〜3行>
+Meta: branch= commit= test=
+Park: <1行>
+Next: <1つ>
+-->
