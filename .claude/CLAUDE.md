@@ -3,7 +3,7 @@
 **このファイルが最優先**。不明点・矛盾・仕様の空白があれば勝手に決めず停止して報告する。
 
 対象リポジトリ：
-- https://github.com/s14k17r18-glitch/Hokyoksei
+- https://github.com/s14k17r18-glitch/Polaris.git
 
 ---
 

@@ -22,7 +22,7 @@ class FileLocalStore implements LocalStore {
   Future<Directory> get _dir async {
     if (_storageDirectory != null) return _storageDirectory!;
     final appDir = await getApplicationDocumentsDirectory();
-    _storageDirectory = Directory('${appDir.path}/hokyoksei_data');
+    _storageDirectory = Directory('${appDir.path}/polaris_data');
     if (!await _storageDirectory!.exists()) {
       await _storageDirectory!.create(recursive: true);
     }
@@ -35,7 +35,8 @@ class FileLocalStore implements LocalStore {
   Future<void> _append(String filename, Map<String, dynamic> data) async {
     await _dir; // ディレクトリ初期化を保証
     final file = _getFile(filename);
-    final line = '${jsonEncode(data)}\n';
+    final encoded = jsonEncode(data);
+    final line = '$encoded' '\n';
     await file.writeAsString(line, mode: FileMode.append);
   }
 

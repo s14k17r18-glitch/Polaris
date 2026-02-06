@@ -3,6 +3,8 @@ description: モーショントークン（duration・curve）単一ソース
 version: 0.1.0
 publish_to: none
 
+resolution: workspace
+
 environment:
   sdk: ">=3.6.0 <4.0.0"
   flutter: ">=3.27.0"

@@ -125,7 +125,9 @@ List<Violation> scanFile(String filePath) {
   final violations = <Violation>[];
   final file = File(filePath);
 
-  if (!file.existsSync()) return violations;
+  if (!file.existsSync()) {
+    return violations;
+  }
 
   final lines = file.readAsLinesSync();
   for (var i = 0; i < lines.length; i++) {
@@ -172,14 +174,29 @@ List<String> collectDartFiles(String rootPath) {
 
   for (final target in targets) {
     final dir = Directory('$rootPath/$target');
-    if (!dir.existsSync()) continue;
+    if (!dir.existsSync()) {
+      continue;
+    }
 
     dir.listSync(recursive: true).forEach((entity) {
-      if (entity is File && entity.path.endsWith('.dart')) {
-        final path = entity.path.replaceAll('\\', '/');
+        if (entity is File && entity.path.endsWith('.dart')) {
+          final path = entity.path.replaceAll('\\', '/');
 
-        // 除外: test/ 配下
-        if (path.contains('/test/')) return;
+          // 除外: 生成物・ビルド成果物
+          if (path.contains('/.dart_tool/')) {
+            return;
+          }
+          if (path.contains('/build/')) {
+            return;
+          }
+          if (path.contains('/windows/flutter/ephemeral/')) {
+            return;
+          }
+
+          // 除外: test/ 配下
+          if (path.contains('/test/')) {
+            return;
+          }
 
         // 除外: 生成コード
         if (path.endsWith('.g.dart') || path.endsWith('.freezed.dart')) {
@@ -187,7 +204,9 @@ List<String> collectDartFiles(String rootPath) {
         }
 
         // 除外: l10n_ja 自体（ここは日本語文言の定義場所）
-        if (path.contains('/l10n_ja/')) return;
+        if (path.contains('/l10n_ja/')) {
+          return;
+        }
 
         files.add(entity.path);
       }
@@ -201,11 +220,11 @@ void main(List<String> args) {
   // リポジトリルートを取得
   final rootPath = args.isNotEmpty ? args[0] : Directory.current.path;
 
-  print('====================================');
-  print('  英語直書きチェック');
-  print('====================================');
-  print('対象: apps/, packages/ (l10n_ja除く)');
-  print('');
+  stdout.writeln('====================================');
+  stdout.writeln('  英語直書きチェック');
+  stdout.writeln('====================================');
+  stdout.writeln('対象: apps/, packages/ (l10n_ja除く)');
+  stdout.writeln('');
 
   final files = collectDartFiles(rootPath);
   final allViolations = <Violation>[];
@@ -216,12 +235,12 @@ void main(List<String> args) {
   }
 
   if (allViolations.isEmpty) {
-    print('[OK] 英語直書きなし');
+    stdout.writeln('[OK] 英語直書きなし');
     exit(0);
   } else {
-    print('[FAIL] 英語直書き検出 (${allViolations.length}件)');
+    stdout.writeln('[FAIL] 英語直書き検出 (${allViolations.length}件)');
     for (final v in allViolations) {
-      print(v);
+      stdout.writeln(v);
     }
     exit(1);
   }

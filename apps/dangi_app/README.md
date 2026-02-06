@@ -1,6 +1,6 @@
 # dangi_app
 
-Hokyoksei 談議アプリケーション（Windows + iOS クロスプラットフォーム）
+Polaris 談議アプリケーション（Windows + iOS クロスプラットフォーム）
 
 ## 役割
 

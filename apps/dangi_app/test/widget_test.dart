@@ -1,4 +1,4 @@
-// 北極星（Hokyoksei）基本ウィジェットテスト
+// Polaris基本ウィジェットテスト
 // M0-B2: 状態遷移と画面切り替えの確認
 
 import 'package:flutter_test/flutter_test.dart';
@@ -14,14 +14,14 @@ void main() {
     await tester.pumpWidget(const DangiApp());
 
     // 初期状態: BOOT（起動中）
-    expect(find.text('北極星（Hokyoksei）'), findsOneWidget);
+    expect(find.text('Polaris'), findsOneWidget);
     expect(find.text('起動中...'), findsOneWidget);
 
     // postFrameCallback で IDLE へ遷移
     await tester.pumpAndSettle();
 
     // IDLE 状態: 待機中画面
-    expect(find.text('北極星（Hokyoksei）'), findsOneWidget);
+    expect(find.text('Polaris'), findsOneWidget);
     expect(find.text('待機中'), findsOneWidget);
     expect(find.text('開始'), findsOneWidget);
 

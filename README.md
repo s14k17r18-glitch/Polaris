@@ -1,10 +1,10 @@
-# 北極星（Hokyoksei）
+# Polaris
 
 Windows + iOS クロスプラットフォーム対話アプリケーション
 
 ## 概要
 
-「北極星（Hokyoksei）」は、複数のPersona（人格）による対話を通じて、新しい洞察（Knowledge Crystal）を生成するアプリケーションです。
+「Polaris」は、複数のPersona（人格）による対話を通じて、新しい洞察（Knowledge Crystal）を生成するアプリケーションです。
 
 ## 技術スタック
 

@@ -87,6 +87,12 @@ yarn-error.log*
 coverage/
 *.lcov
 
+# Distribution
+dist/
+
 # Test related
 .test_coverage.dart
 test/.test_coverage.dart
+
+# ignore local devtools config
+devtools_options.yaml

@@ -4,7 +4,7 @@ class L10nJa {
   L10nJa._(); // インスタンス化禁止
 
   // アプリ基本
-  static const String appTitle = '北極星（Hokyoksei）';
+  static const String appTitle = 'Polaris';
   static const String helloWorld = 'M0: 骨組み確認用 Hello World';
 
   // 状態表示（B2 で追加）
@@ -19,7 +19,9 @@ class L10nJa {
   static const String stateDiscussion = '議論中';
 
   // 状態表示（M1-D4 で追加）
-  static const String stateConvergence = '結晶化';
+  static const String stateConvergence = '結論収束中';
+  static const String stateCrystallization = '結晶生成中';
+  static const String stateDissolution = '解散中';
 
   // 状態表示（M1-B3 で追加）
   static const String stateError = 'エラー';
@@ -34,6 +36,7 @@ class L10nJa {
 
   // ボタン（M1-D4 で追加）
   static const String buttonToHistory = '履歴へ';
+  static const String buttonToTop = 'トップへ';
 
   // ボタン（M1-B3 で追加）
   static const String buttonRetry = '再試行';
@@ -49,7 +52,9 @@ class L10nJa {
   static const String descDiscussion = '談議が進行中です。「次の発言」で議論を続けます。';
 
   // 状態説明（M1-D4 で追加）
-  static const String descConvergence = '談議が結晶化されました。以下の内容をご確認ください。';
+  static const String descConvergence = '結論をまとめています。しばらくお待ちください。';
+  static const String descCrystallization = '談議が結晶化されました。以下の内容をご確認ください。';
+  static const String descDissolution = '保存しました。トップへ戻ります。';
 
   // Crystal 項目ラベル（M1-D4 で追加）
   static const String labelCrystalTitle = 'タイトル';

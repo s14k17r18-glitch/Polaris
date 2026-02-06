@@ -3,6 +3,8 @@ description: 状態遷移・会話エンジン・データモデル・同期ク�
 version: 0.1.0
 publish_to: none
 
+resolution: workspace
+
 environment:
   sdk: ">=3.6.0 <4.0.0"
 

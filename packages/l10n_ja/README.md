@@ -23,5 +23,5 @@ A6 で「英語直書き禁止」の自動チェックを導入予定
 
 ### アプリ基本
 
-- `appTitle`: 北極星（Hokyoksei）
+- `appTitle`: Polaris
 - `helloWorld`: M0: 骨組み確認用 Hello World
