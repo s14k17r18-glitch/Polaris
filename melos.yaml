@@ -10,8 +10,15 @@ command:
     branch: main
 
 scripts:
+  verify:
+    run: |
+      melos bootstrap
+      melos run analyze
+      melos run test
+    description: Bootstrap workspace, then run analyze and test
+
   analyze:
-    run: dart analyze
+    run: dart analyze apps/dangi_app packages/shared_core packages/l10n_ja packages/motion_tokens packages/ui_tokens
     description: Run Dart analyzer for all packages
 
   format:
@@ -19,7 +26,7 @@ scripts:
     description: Format all Dart files
 
   test:
-    run: flutter test
+    run: |
+      (cd apps/dangi_app && flutter test)
+      (cd packages/shared_core && dart test)
     description: Run tests for all packages
-    packageFilters:
-      dirExists: test
