@@ -19,3 +19,14 @@ A:
 Meta: branch=feature/M0-add-ios-shell commit=d38e208 test=melos run verify (pass)
 Park: `melos bootstrap` が 0 packages 表示のままのため、workspace解決方式の統一は別タスクで見直す。
 Next: 既存PR `feature/M0-add-ios-shell` に本コミットを積んでレビュー依頼する。
+
+### [2026-02-07 03] Q/A
+Q: M0-A4/A5 の実行準備として、Windows/iOS起動確認のRunbookを整備し、チェック更新可能な状態を作る。
+A:
+- `docs/RUNBOOK_LAUNCH_CHECKS.md` を新規作成し、Windows/iOSそれぞれの前提・コマンド・期待証跡を固定。
+- 主要遷移（idle→...→idle）の確認観点と、結果貼り戻しテンプレートを明文化。
+- `docs/PROGRESS_CHECKLIST.md` の M0-A4/M0-A5 は実測前のため `[ ]` のまま維持。
+- ユーザーがRunbook実行結果を貼れば、そのままA4/A5の完了判定へ進める状態にした。
+Meta: branch=feature/M0-launch-checks commit=d514f9f test=docs update only
+Park: なし
+Next: ユーザーが Windows/iOS の実行ログを Runbook 形式で共有する。
