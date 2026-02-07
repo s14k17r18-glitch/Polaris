@@ -15,7 +15,8 @@ Windows/iOS の「起動＋主要遷移が見える」ことを事実で確認�
 
 ### Commands
 1) repoを最新mainにする
-2) アプリディレクトリで実行：
+2) 初回で `Building with plugins requires symlink support` が出る場合は、Windowsの開発者モードを有効化し、管理者PowerShellで実行する
+3) アプリディレクトリで実行：
 ```bash
 cd apps/dangi_app
 flutter doctor
@@ -28,6 +29,11 @@ flutter run -d windows
 - `flutter devices` の出力
 - `flutter run -d windows` の起動ログ末尾（失敗時はエラー全文）
 - 画面遷移の確認結果（できた/できない、止まった画面）
+
+### Latest evidence (M0-A4)
+- `Built build\\windows\\x64\\runner\\Debug\\dangi_app.exe`
+- `Syncing files to device Windows...`
+- `Lost connection to device.`（ユーザー申告: 起動確認済み）
 
 ## iOS (user-run on macOS)
 ### Prereq
