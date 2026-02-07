@@ -19,3 +19,25 @@ A:
 Meta: branch=feature/M0-add-ios-shell commit=d38e208 test=melos run verify (pass)
 Park: `melos bootstrap` が 0 packages 表示のままのため、workspace解決方式の統一は別タスクで見直す。
 Next: 既存PR `feature/M0-add-ios-shell` に本コミットを積んでレビュー依頼する。
+
+### [2026-02-07 03] Q/A
+Q: M0-A4/A5 の実行準備として、Windows/iOS起動確認のRunbookを整備し、チェック更新可能な状態を作る。
+A:
+- `docs/RUNBOOK_LAUNCH_CHECKS.md` を新規作成し、Windows/iOSそれぞれの前提・コマンド・期待証跡を固定。
+- 主要遷移（idle→...→idle）の確認観点と、結果貼り戻しテンプレートを明文化。
+- `docs/PROGRESS_CHECKLIST.md` の M0-A4/M0-A5 は実測前のため `[ ]` のまま維持。
+- ユーザーがRunbook実行結果を貼れば、そのままA4/A5の完了判定へ進める状態にした。
+Meta: branch=feature/M0-launch-checks commit=d514f9f test=docs update only
+Park: なし
+Next: ユーザーが Windows/iOS の実行ログを Runbook 形式で共有する。
+
+### [2026-02-07 04] Q/A
+Q: Windows起動確認ログを受領し、M0-A4を完了としてdocs更新する。
+A:
+- `flutter run -d windows` の証跡（Built/Syncing/Lost connection）とユーザー申告「起動確認済み」を事実として採用。
+- `docs/PROGRESS_CHECKLIST.md` の M0-A4 を `[x]` に更新し、M0-A5 は `[ ]` のまま維持。
+- `docs/RUNBOOK_LAUNCH_CHECKS.md` に symlink権限対策（開発者モード + 管理者PowerShell）を追記。
+- Windows実行時の最新証跡をRunbookへ残し、次回の再現手順を固定。
+Meta: branch=feature/M0-launch-checks commit=18a23b2 test=docs update only
+Park: 通常権限PowerShellでは symlink 要件で失敗するため、Windows起動確認は管理者PowerShell実行を標準手順として維持する。
+Next: iOSのRunbook実行ログをユーザーが共有する。
