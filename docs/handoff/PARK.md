@@ -1,0 +1,1 @@
+- (2026-02-07) `melos run verify` が未定義で実行不可 / plan: `melos.yaml` に verify（bootstrap+analyze+test）を定義して再実行
