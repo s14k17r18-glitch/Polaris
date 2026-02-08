@@ -56,6 +56,13 @@ flutter run -d ios
 - `flutter run -d ios` のログ（失敗時はエラー全文）
 - 画面遷移の確認結果
 
+### CI alternative (no macOS)
+Macが無い場合は GitHub Actions の iOS build を証跡として採用（M0-A5b）。
+Evidence:
+- Workflow: `CI iOS (no-codesign)`
+- Command: `flutter build ios --no-codesign`
+- Success: workflow が成功し、`ios-build` が green
+
 ## Result template (paste back)
 ### Windows result
 - OK/NG:

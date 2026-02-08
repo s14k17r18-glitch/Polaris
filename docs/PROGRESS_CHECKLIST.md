@@ -10,6 +10,7 @@
 - [x] M0-A2 iOS Shell 追加（生成のみ） / DoD: apps/dangi_app/ios/ が作成され差分確認済み
 - [x] M0-A3 verify（WSL）完走 / DoD: melos run verify がpass
 - [x] M0-A4 Windows起動確認（管理者PowerShellで `flutter run -d windows` 起動確認） / DoD: windowsで起動し主要遷移が見える
+- [ ] M0-A5b iOS build（CI / no-codesign） / DoD: GitHub Actionsの iOS build が成功（ログが残る）
 - [ ] M0-A5 iOS起動確認（ユーザー実施） / DoD: iOSで起動し主要遷移が見える
 
 ## M1（談議縦スライス完走）
