@@ -140,3 +140,14 @@ A:
 Meta: branch=main commit=3cf9e9d test=docs update only
 Park: なし
 Next: M0-A5 iOS起動確認（ユーザー実施） / DoD: iOSで起動し主要遷移が見える
+
+### [2026-02-08 21] Q/A
+Q: 次へ進む前に、Windows/WSL で発生した問題を把握し、再発防止の“解決手順”として docs に固定する。
+A:
+- Windows→WSL backend 到達（localhost/8080）、UNCパス起因の `pubspec.yaml not found`、symlink（`.plugin_symlinks`）失敗など、詰まりポイントを整理。
+- `docs/TROUBLESHOOT_WINDOWS_WSL.md` に症状/原因/対策/確認コマンドを集約し、portproxy の追加/削除（後片付け）まで手順化。
+- `docs/RUNBOOK_SYNC_SMOKE.md` からトラブルシュート文書へ誘導を追加し、Runbookの二重管理を避けた。
+- 次回以降は「ユーザー=Windows PowerShell実行 / Codex=WSL内作業」を前提に復旧可能。
+Meta: branch=main commit=8e22c24 test=docs troubleshoot guide
+Park: なし
+Next: M0-A5 iOS起動確認（ユーザー実施） / DoD: iOSで起動し主要遷移が見える
