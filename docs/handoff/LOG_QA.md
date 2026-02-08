@@ -41,3 +41,25 @@ A:
 Meta: branch=feature/M0-launch-checks commit=18a23b2 test=docs update only
 Park: 通常権限PowerShellでは symlink 要件で失敗するため、Windows起動確認は管理者PowerShell実行を標準手順として維持する。
 Next: iOSのRunbook実行ログをユーザーが共有する。
+
+### [2026-02-07 06] Q/A
+Q: Mac無しのiOS build証跡をCIで確保するため、workflowとrunbook/チェックを追加する。
+A:
+- GitHub Actions に iOS build（no-codesign）のworkflowを追加（macos-14）。
+- `docs/PROGRESS_CHECKLIST.md` に M0-A5b を追加し、未完了のまま維持。
+- `docs/RUNBOOK_LAUNCH_CHECKS.md` に CI代替手順と証跡条件を追記。
+- PR作成後にCIの完了を待ち、green確認でM0-A5bを更新する前提を明文化。
+Meta: branch=feature/M0-ci-ios-build commit=TBD test=CI iOS (no-codesign) pending
+Park: なし
+Next: PRのCIがgreenになったらM0-A5bを[x]に更新してamendする。
+
+### [2026-02-07 07] Q/A
+Q: CI iOS build（no-codesign）がgreenになったため、M0-A5bを完了扱いに更新する。
+A:
+- PRのGitHub Actions（CI iOS no-codesign）が成功し、証跡が残ったことを確認。
+- `docs/PROGRESS_CHECKLIST.md` の M0-A5b を `[x]` に更新。
+- `docs/RUNBOOK_LAUNCH_CHECKS.md` のCI代替手順を維持し、M0-A5は未実施のまま。
+- 1コミット維持のため amend + force-with-lease で反映する。
+Meta: branch=feature/M0-ci-ios-build commit=amended test=CI iOS (no-codesign) pass
+Park: なし
+Next: iOS起動確認（M0-A5）を実施してログを共有する。

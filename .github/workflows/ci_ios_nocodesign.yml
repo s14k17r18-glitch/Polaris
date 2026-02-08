@@ -1,0 +1,35 @@
+name: CI iOS (no-codesign)
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  ios-build:
+    runs-on: macos-14
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          # Windowsで使っているのが 3.38.9 なら揃える。ズレが怖ければこの行を残す。
+          flutter-version: "3.38.9"
+          cache: true
+
+      - name: Flutter version
+        run: flutter --version
+
+      - name: Activate melos
+        run: dart pub global activate melos
+
+      - name: Bootstrap
+        run: melos bootstrap
+
+      - name: iOS build (no codesign)
+        working-directory: apps/dangi_app
+        run: flutter build ios --no-codesign
