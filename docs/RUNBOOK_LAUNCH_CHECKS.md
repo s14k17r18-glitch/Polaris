@@ -93,4 +93,4 @@ flutter run -d windows --dart-define=SYNC_PROBE=true --dart-define=SYNC_BASE_URL
 
 ### Evidence to paste
 - backend の起動ログ（listening 行）
-- Flutter の起動ログに `SYNC_PROBE: push/pull completed`
+- Flutter の起動ログに `SYNC_PROBE: health/pull/push completed`

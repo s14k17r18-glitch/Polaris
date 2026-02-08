@@ -19,6 +19,8 @@ class SyncProbe {
     final id = '$deviceId-$now';
 
     try {
+      await client.health();
+      await client.pull(cursor: null, limit: 10);
       await client.push(
         clientTime: now,
         mutations: [
@@ -35,8 +37,7 @@ class SyncProbe {
           ),
         ],
       );
-      await client.pull(cursor: null, limit: 10);
-      debugPrint('SYNC_PROBE: push/pull completed');
+      debugPrint('SYNC_PROBE: health/pull/push completed');
     } catch (error) {
       debugPrint('SYNC_PROBE error: $error');
     } finally {
