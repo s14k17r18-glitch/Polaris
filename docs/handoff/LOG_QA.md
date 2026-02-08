@@ -74,3 +74,14 @@ A:
 Meta: branch=feature/M3-min-data-contract commit=TBD test=docs update only
 Park: なし
 Next: PRを作成してレビュー依頼する。
+
+### [2026-02-08 17] Q/A
+Q: M3-A1としてBackend stackを決定し、docsに固定してチェックリストを更新する。
+A:
+- TypeScript(Node 20)+Fastify+Zod(OpenAPI)+Cloud Run+Firestore を採用決定として `docs/14_BACKEND_STACK_DECISION.md` を追加。
+- 候補A/B/Cを比較し、WSL開発性・OpenAPI固定・Vertex連携の観点でAを採用と明記。
+- `docs/MASTER_PLAN.md` の不明項目を決定内容で更新。
+- `docs/PROGRESS_CHECKLIST.md` の M3-A1 を [x] に更新。
+Meta: branch=feature/M3-backend-stack-decision commit=TBD test=docs update only
+Park: なし
+Next: `contracts/` に OpenAPI/JSON Schema の最小ひな形を固定する（M3-A2）。
