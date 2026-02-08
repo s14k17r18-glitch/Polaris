@@ -52,3 +52,14 @@ A:
 Meta: branch=feature/M0-ci-ios-build commit=TBD test=CI iOS (no-codesign) pending
 Park: なし
 Next: PRのCIがgreenになったらM0-A5bを[x]に更新してamendする。
+
+### [2026-02-07 07] Q/A
+Q: CI iOS build（no-codesign）がgreenになったため、M0-A5bを完了扱いに更新する。
+A:
+- PRのGitHub Actions（CI iOS no-codesign）が成功し、証跡が残ったことを確認。
+- `docs/PROGRESS_CHECKLIST.md` の M0-A5b を `[x]` に更新。
+- `docs/RUNBOOK_LAUNCH_CHECKS.md` のCI代替手順を維持し、M0-A5は未実施のまま。
+- 1コミット維持のため amend + force-with-lease で反映する。
+Meta: branch=feature/M0-ci-ios-build commit=amended test=CI iOS (no-codesign) pass
+Park: なし
+Next: iOS起動確認（M0-A5）を実施してログを共有する。
