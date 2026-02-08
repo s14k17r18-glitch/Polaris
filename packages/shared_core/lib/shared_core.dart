@@ -32,6 +32,7 @@ export 'src/conversation/summary_crystal.dart';
 
 // M2: Model (E1 で実装：保存・同期用データモデル)
 export 'src/model/sync_metadata.dart';
+export 'src/model/theme_input.dart';
 export 'src/model/persona_entity.dart';
 export 'src/model/persona_snapshot_entity.dart';
 export 'src/model/session_entity.dart';

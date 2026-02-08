@@ -184,3 +184,14 @@ A:
 Meta: branch=feature/next-step-m1-kickoff commit=HEAD test=docs update only
 Park: なし
 Next: M1-A1 テーマ入力値をUI→Engineへ注入 / DoD: 固定文字列でない
+
+### [2026-02-09 01] Q/A
+Q: M1-A1としてテーマ入力値をUIから受け取り、Engine/shared_coreへ注入できるようにする。
+A:
+- shared_coreに `ThemeInput` を追加し、UI側で入力値を保持して渡す形にした。
+- テーマ入力画面にTextFieldを追加し、空でない入力のみ遷移可能にした。
+- ConversationEngine/Crystal生成/セッション保存が固定文字列ではなく入力値を使用するように更新。
+- 既存遷移/SyncProbeを壊さず、`melos run verify` は pass。
+Meta: branch=feature/M1-theme-input-wireup commit=HEAD test=melos run verify (pass)
+Park: なし
+Next: M1-A2 personaSelect 最小実装 / DoD: 遷移が成立し議論へ入れる
