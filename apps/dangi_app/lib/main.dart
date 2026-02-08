@@ -4,6 +4,7 @@ import 'package:ui_tokens/ui_tokens.dart';
 import 'package:l10n_ja/l10n_ja.dart';
 import 'package:shared_core/shared_core.dart';
 import 'auth/auth_repository.dart';
+import 'dev/sync_probe.dart';
 import 'storage/file_local_store.dart';
 
 void main() {
@@ -78,6 +79,10 @@ class _SessionScreenState extends State<SessionScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       // M3-F1: Auth 初期化（最優先）
       _authRepository = await AuthRepository.initialize();
+      await SyncProbe.maybeRun(
+        deviceId: _authRepository.deviceId,
+        ownerUserId: _authRepository.ownerUserId,
+      );
 
       _transition(SessionEvent.appStarted);
       // M2-E4: 最新セッション復元
