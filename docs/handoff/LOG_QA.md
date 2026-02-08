@@ -118,3 +118,14 @@ A:
 Meta: branch=feature/M3-syncclient-wireup commit=HEAD test=melos run verify (pass)
 Park: なし
 Next: SyncClient の本接続（Auth/Firestore）前提を整理する。
+
+### [2026-02-08 19] Q/A
+Q: Runbookに沿って Windows で Sync smoke（health→pull→push）の証跡を取得し、再現手順を確定する。
+A:
+- Windows→backend は portproxy（127.0.0.1:8080→WSL_IP:8080）で到達性を確保し、`curl.exe http://127.0.0.1:8080/v1/health` で 200 を確認。
+- `\\wsl$`（UNC/ネットワーク扱い）上の `flutter run -d windows` は symlink/作業ディレクトリ問題で失敗するため、Windowsローカル `C:\\src\\Polaris` に clone して実行。
+- `flutter run -d windows --dart-define=SYNC_PROBE=true --dart-define=SYNC_BASE_URL=http://127.0.0.1:8080` を実行し、`SYNC_PROBE: health/pull/push completed` を取得。
+- これにより M3-A3b の疎通証跡（Runbook通り）が揃った。
+Meta: branch=main commit=69ac97e test=windows sync probe (health/pull/push) ok
+Park: なし
+Next: M0-A5 iOS起動確認（ユーザー実施） / DoD: iOSで起動し主要遷移が見える

@@ -40,3 +40,12 @@ flutter run -d windows --dart-define=SYNC_PROBE=true --dart-define=SYNC_BASE_URL
 - Health: OK/NG
 - SyncProbe: OK/NG
 - Logs:
+
+## Notes (Windows/WSL gotchas)
+- Windows から WSL backend に `localhost:8080` で到達できない場合は、WSL IP を確認して portproxy で中継する（管理者PowerShell）:
+  - `$WSL_IP = (wsl.exe -d Ubuntu -- hostname -I).Trim().Split(' ')[0]`
+  - `netsh interface portproxy add v4tov4 listenport=8080 listenaddress=127.0.0.1 connectport=8080 connectaddress=$WSL_IP`
+  - `curl.exe -sS http://127.0.0.1:8080/v1/health`
+- Windows デスクトップビルドを `\\wsl$`（UNC/ネットワーク扱い）上で実行すると、`.plugin_symlinks` 作成が `ERROR_INVALID_FUNCTION` で失敗することがある。
+  - 回避：Windowsローカル（例: `C:\\src\\Polaris`）に repo を clone して `apps/dangi_app` から `flutter run -d windows ...` を実行する。
+- UNCパス上では `cmd.exe` が作業ディレクトリを保持できず `No pubspec.yaml` になる場合がある。上記の Windowsローカル clone で回避する。
