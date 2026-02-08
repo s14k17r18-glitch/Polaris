@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/schemas/message.json",
+  "title": "Message",
+  "type": "object",
+  "properties": {
+    "message_id": { "type": "string", "description": "UUIDv7" },
+    "session_id": { "type": "string", "description": "UUIDv7" },
+    "turn_index": { "type": "integer" },
+    "speaker_type": { "type": "string" },
+    "speaker_id": { "type": "string" },
+    "text": { "type": "string" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "tags": { "type": ["array", "null"], "items": { "type": "string" } },
+    "guard_flags": { "type": ["object", "null"] },
+    "schema_version": { "type": "integer" },
+    "owner_user_id": { "type": "string" },
+    "device_id": { "type": "string" },
+    "rev": { "type": ["string", "number"] },
+    "updated_at": { "type": "string", "format": "date-time" },
+    "deleted_at": { "type": ["string", "null"], "format": "date-time" }
+  },
+  "required": [
+    "message_id",
+    "session_id",
+    "turn_index",
+    "speaker_type",
+    "speaker_id",
+    "text",
+    "created_at",
+    "schema_version",
+    "owner_user_id",
+    "updated_at",
+    "rev"
+  ]
+}

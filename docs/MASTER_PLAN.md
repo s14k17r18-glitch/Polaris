@@ -25,7 +25,7 @@
   - iOS: **なし**（`apps/dangi_app/ios/` ディレクトリが存在しない）
 - Backend / Contracts:
   - `backend/`: READMEのみ（未実装）
-  - `contracts/`: READMEのみ（未実装）
+  - `contracts/`: openapi.yaml / schemas/*.json / README（最小契約）
 
 ## 3. 現状の実装ステータス（出来てる/未実装/不明）
 ### 3.1 MVP（M0〜M3）対比（要点）
@@ -149,7 +149,7 @@
   - DoD: 両OSで保存・履歴・復元が破綻しない
 - M3: 同期 + Backend + LLM Proxy
   - Backend stack決定（TypeScript/Fastify/Zod + Cloud Run + Firestore）
-  - contracts（OpenAPI/JSON Schema）整備
+  - contracts（OpenAPI/JSON Schema）整備（`contracts/openapi.yaml` / `contracts/schemas/*.json`）
   - Auth（トークン）→ Sync push/pull → 競合ログ → オフライン復帰
   - LLM proxy（Gemini/Vertex）→ Turn/要約/Crystal の実接続
   - DoD: Windowsで作ったセッションがiOSで見える（逆も）＋ LLMキーがクライアントに存在しない

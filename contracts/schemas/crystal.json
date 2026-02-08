@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/schemas/crystal.json",
+  "title": "Crystal",
+  "type": "object",
+  "properties": {
+    "crystal_id": { "type": "string", "description": "UUIDv7" },
+    "session_id": { "type": "string", "description": "UUIDv7" },
+    "summary_text": { "type": "string" },
+    "heat_score": { "type": "number" },
+    "color": { "type": "string" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "schema_version": { "type": "integer" },
+    "owner_user_id": { "type": "string" },
+    "device_id": { "type": "string" },
+    "rev": { "type": ["string", "number"] },
+    "updated_at": { "type": "string", "format": "date-time" },
+    "deleted_at": { "type": ["string", "null"], "format": "date-time" }
+  },
+  "required": [
+    "crystal_id",
+    "session_id",
+    "summary_text",
+    "heat_score",
+    "color",
+    "created_at",
+    "schema_version",
+    "owner_user_id",
+    "updated_at",
+    "rev"
+  ]
+}

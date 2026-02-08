@@ -85,3 +85,14 @@ A:
 Meta: branch=feature/M3-backend-stack-decision commit=TBD test=docs update only
 Park: なし
 Next: `contracts/` に OpenAPI/JSON Schema の最小ひな形を固定する（M3-A2）。
+
+### [2026-02-08 17] Q/A
+Q: M3-A2として contracts/ に OpenAPI と JSON Schema の最小ひな形を固定する。
+A:
+- `contracts/openapi.yaml` を追加し、/v1/sync/push・/v1/sync/pull・/v1/health の最小定義を固定（docs/12 も同名に更新）。
+- `contracts/schemas/*.json`（session/message/crystal/persona/persona_snapshot/tombstone/common）を追加し、ID/metadata/tombstone を最小契約で明文化。
+- `contracts/README.md` に契約の正・更新方針・versioningを明記。
+- `docs/MASTER_PLAN.md` と `docs/PROGRESS_CHECKLIST.md` を更新し、M3-A2を完了扱いに反映。
+Meta: branch=feature/M3-contracts-skeleton commit=TBD test=docs/contracts update only
+Park: なし
+Next: M3-A3（Sync push/pull 最小実装）の着手準備を整理する。

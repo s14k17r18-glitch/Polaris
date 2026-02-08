@@ -33,8 +33,19 @@ M3（同期）のための“契約”。これがない同期実装は禁止。
 ---
 
 ## エンドポイント（例：REST）
+### 0) Health
+`GET /v1/health`
+
 ### 1) Pull（差分取得）
-`GET /sync/pull?cursor=<cursor>&limit=<n>`
+`POST /v1/sync/pull`
+
+#### リクエスト（例）
+```json
+{
+  "cursor": "string|null",
+  "limit": 100
+}
+```
 
 #### レスポンス（例）
 ```json
@@ -61,7 +72,7 @@ M3（同期）のための“契約”。これがない同期実装は禁止。
 ---
 
 ### 2) Push（差分送信）
-`POST /sync/push`
+`POST /v1/sync/push`
 
 #### リクエスト（例）
 ```json

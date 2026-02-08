@@ -1,25 +1,22 @@
-# contracts
+# contracts/
+M3同期の契約（OpenAPI/JSON Schema）を固定する場所。実装より先にここを更新する。
 
-OpenAPI / JSON Schema 定義
+## Source of truth
+- docs/12_SYNC_API_SPEC.md（同期APIの唯一の正）
+- contracts/openapi.yaml（エンドポイント/入出力）
+- contracts/schemas/*.json（エンティティ最小スキーマ）
 
-## 役割
+## Update policy
+- 契約変更は docs と contracts を同時更新する。
+- 互換性が壊れる変更は明記し、MVP範囲外なら実装しない。
 
-- **12_SYNC_API_SPEC.md 準拠**（M3で実装）
-- データ契約（07_DATA_MODEL.md 準拠）
+## Versioning
+- 形式: date-based（YYYY.MM.DD）。
+- openapi.yaml の info.version に反映する。
 
-## ディレクトリ構成（M3で作成予定）
+## Append-only representation
+- record_version は `rev` を採用する。
+- event_id は未定義（unknown）。
 
-```
-contracts/
-  openapi/
-    sync_api.yaml        # 同期API仕様（12_SYNC_API_SPEC準拠）
-  schemas/
-    session.json         # Session スキーマ
-    message.json         # Message スキーマ
-    crystal.json         # Crystal スキーマ
-    persona.json         # Persona スキーマ
-```
-
-## M0 実装状況
-
-- ⏳ 空フォルダ（M3で実装予定）
+## Validation (later)
+- OpenAPI/JSON Schema の検証ツールは後続タスクで選定する（現時点は不明）。
