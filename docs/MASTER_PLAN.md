@@ -170,4 +170,4 @@
 5. ローカル保存破損 → schema_version + migration + exportバックアップ
 
 ## 10. Next single action（1つ）
-- `apps/dangi_app` に iOS Shell を追加し、Windows/iOSで起動確認できる状態にする（パリティ契約の前提を満たす）
+- M1-A1 テーマ入力値をUI→Engineへ注入し、M1縦スライスの入口を作る（M0-A5は端末準備後に実施）
