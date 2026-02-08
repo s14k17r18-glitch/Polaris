@@ -42,8 +42,8 @@
   - 出来てる: Auth最小（device_id/owner_user_idの永続化）
   - 未実装: Sync Client / Backend Sync API / OpenAPI・JSON Schema（contracts）/ 競合処理ログ / オフライン復帰フロー
 
-### 3.2 “不明” として残す項目（決定待ち）
-- Backend実装スタック（言語/フレームワーク/ホスティング）
+### 3.2 決定事項 / 未確定
+- Backend実装スタック: TypeScript（Node 20）+ Fastify + Zod（OpenAPI）+ Cloud Run + Firestore（決定済み / `docs/14_BACKEND_STACK_DECISION.md`）
 - Gemini呼び出し方式の最終決定（Vertex AI主軸だが、ローカル試作はAPI key案も比較）
 
 ## 4. アーキテクチャ（Flutter / 状態遷移 / データ流れ / AI層）
@@ -148,7 +148,7 @@
   - export/import（JSON）導線の仕様化→実装
   - DoD: 両OSで保存・履歴・復元が破綻しない
 - M3: 同期 + Backend + LLM Proxy
-  - Backend stack決定（Decision）
+  - Backend stack決定（TypeScript/Fastify/Zod + Cloud Run + Firestore）
   - contracts（OpenAPI/JSON Schema）整備
   - Auth（トークン）→ Sync push/pull → 競合ログ → オフライン復帰
   - LLM proxy（Gemini/Vertex）→ Turn/要約/Crystal の実接続
