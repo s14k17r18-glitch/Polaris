@@ -129,3 +129,14 @@ A:
 Meta: branch=main commit=69ac97e test=windows sync probe (health/pull/push) ok
 Park: なし
 Next: M0-A5 iOS起動確認（ユーザー実施） / DoD: iOSで起動し主要遷移が見える
+
+### [2026-02-08 20] Q/A
+Q: M0-A5（iOS起動確認）を実施できない前提で、Runbook/Checklist/LOGを整合させる。
+A:
+- iOS実機/Simulatorが無い場合は M0-A5 を未実施のまま維持し、勝手に [x] にしない方針を明記。
+- 代替の証跡は M0-A5b（CI no-codesign）を採用し、実機入手後に M0-A5 を実施する流れを固定。
+- `docs/RUNBOOK_LAUNCH_CHECKS.md` に “no macOS/no device” の方針と最短実行手順を追記。
+- Checklist の M0-A5 は未完了、M0-A5b は完了という現状と整合する。
+Meta: branch=main commit=3cf9e9d test=docs update only
+Park: なし
+Next: M0-A5 iOS起動確認（ユーザー実施） / DoD: iOSで起動し主要遷移が見える

@@ -56,6 +56,11 @@ flutter run -d ios
 - `flutter run -d ios` のログ（失敗時はエラー全文）
 - 画面遷移の確認結果
 
+### Policy (no macOS / no device)
+- iOS実機/シミュレータが無い場合、M0-A5 は「未実施のまま」を維持する（勝手に [x] にしない）。
+- 代替証跡は M0-A5b（CI no-codesign）で確保し、実機/Simulatorが用意できた時点で M0-A5 を実施する。
+- macOSが用意できたら上記 Commands をそのまま実行して証跡を取得する（最短は `flutter run -d ios`）。
+
 ### CI alternative (no macOS)
 Macが無い場合は GitHub Actions の iOS build を証跡として採用（M0-A5b）。
 Evidence:
