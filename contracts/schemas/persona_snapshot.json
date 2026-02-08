@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/schemas/persona_snapshot.json",
+  "title": "PersonaSnapshot",
+  "type": "object",
+  "properties": {
+    "snapshot_id": { "type": "string", "description": "UUIDv7" },
+    "session_id": { "type": "string", "description": "UUIDv7" },
+    "persona_id": { "type": "string", "description": "UUIDv7" },
+    "persona_version": { "type": "integer" },
+    "definition_json": { "type": "object" },
+    "schema_version": { "type": "integer" },
+    "owner_user_id": { "type": "string" },
+    "device_id": { "type": "string" },
+    "rev": { "type": ["string", "number"] },
+    "updated_at": { "type": "string", "format": "date-time" },
+    "deleted_at": { "type": ["string", "null"], "format": "date-time" }
+  },
+  "required": [
+    "snapshot_id",
+    "session_id",
+    "persona_id",
+    "persona_version",
+    "definition_json",
+    "schema_version",
+    "owner_user_id",
+    "updated_at",
+    "rev"
+  ]
+}

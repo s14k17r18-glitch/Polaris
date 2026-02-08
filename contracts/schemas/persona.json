@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/schemas/persona.json",
+  "title": "Persona",
+  "type": "object",
+  "properties": {
+    "persona_id": { "type": "string", "description": "UUIDv7" },
+    "version": { "type": "integer" },
+    "definition_json": { "type": "object" },
+    "schema_version": { "type": "integer" },
+    "owner_user_id": { "type": "string" },
+    "device_id": { "type": "string" },
+    "rev": { "type": ["string", "number"] },
+    "updated_at": { "type": "string", "format": "date-time" },
+    "deleted_at": { "type": ["string", "null"], "format": "date-time" }
+  },
+  "required": [
+    "persona_id",
+    "version",
+    "definition_json",
+    "schema_version",
+    "owner_user_id",
+    "updated_at",
+    "rev"
+  ]
+}

@@ -1,0 +1,205 @@
+openapi: 3.0.3
+info:
+  title: Polaris Sync API
+  version: 2026.02.08
+  description: |
+    M3同期の最小契約（docs/12_SYNC_API_SPEC.md 準拠）。
+    実装は未完。仕様のみ固定する。
+servers:
+  - url: https://api.example.com
+    description: TBD Cloud Run base URL
+security:
+  - BearerAuth: []
+paths:
+  /v1/health:
+    get:
+      summary: Health check
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                required: [status]
+  /v1/sync/pull:
+    post:
+      summary: Pull sync changes
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SyncPullRequest'
+      responses:
+        '200':
+          description: Pull response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SyncPullResponse'
+  /v1/sync/push:
+    post:
+      summary: Push sync mutations
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SyncPushRequest'
+      responses:
+        '200':
+          description: Push response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SyncPushResponse'
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    SyncChange:
+      type: object
+      properties:
+        entity:
+          type: string
+          enum: [persona, persona_snapshot, session, message, crystal]
+        op:
+          type: string
+          enum: [upsert, delete]
+        id:
+          type: string
+          description: entity_id (UUIDv7)
+        rev:
+          oneOf:
+            - type: string
+            - type: number
+        updated_at:
+          type: string
+          format: date-time
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+        payload:
+          type: object
+          additionalProperties: true
+      required: [entity, op, id, rev, updated_at]
+    SyncPullRequest:
+      type: object
+      properties:
+        cursor:
+          type: string
+          nullable: true
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 1000
+      required: []
+    SyncPullResponse:
+      type: object
+      properties:
+        next_cursor:
+          type: string
+          nullable: true
+        server_time:
+          type: string
+          format: date-time
+        changes:
+          type: array
+          items:
+            $ref: '#/components/schemas/SyncChange'
+      required: [next_cursor, server_time, changes]
+    SyncMutation:
+      type: object
+      properties:
+        entity:
+          type: string
+          enum: [persona, persona_snapshot, session, message, crystal]
+        op:
+          type: string
+          enum: [upsert, delete]
+        id:
+          type: string
+          description: entity_id (UUIDv7)
+        base_rev:
+          oneOf:
+            - type: string
+            - type: number
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+        payload:
+          type: object
+          additionalProperties: true
+      required: [entity, op, id, updated_at]
+    SyncPushRequest:
+      type: object
+      properties:
+        client_time:
+          type: string
+          format: date-time
+        mutations:
+          type: array
+          items:
+            $ref: '#/components/schemas/SyncMutation'
+      required: [client_time, mutations]
+    SyncAccepted:
+      type: object
+      properties:
+        entity:
+          type: string
+        id:
+          type: string
+        rev:
+          oneOf:
+            - type: string
+            - type: number
+        updated_at:
+          type: string
+          format: date-time
+      required: [entity, id, rev, updated_at]
+    SyncConflict:
+      type: object
+      properties:
+        entity:
+          type: string
+        id:
+          type: string
+        reason:
+          type: string
+          enum: [rev_mismatch, schema_mismatch, validation_failed]
+        server_record:
+          type: object
+          additionalProperties: true
+        client_record:
+          type: object
+          additionalProperties: true
+      required: [entity, id, reason]
+    SyncPushResponse:
+      type: object
+      properties:
+        accepted:
+          type: array
+          items:
+            $ref: '#/components/schemas/SyncAccepted'
+        conflicts:
+          type: array
+          items:
+            $ref: '#/components/schemas/SyncConflict'
+      required: [accepted, conflicts]
