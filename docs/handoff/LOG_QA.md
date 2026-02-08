@@ -162,3 +162,14 @@ A:
 Meta: branch=feature/fix-wsl-verify-analyzer commit=HEAD test=melos run verify (pass)
 Park: なし
 Next: M0-A5 iOS起動確認（ユーザー実施） / DoD: iOSで起動し主要遷移が見える
+
+### [2026-02-08 23] Q/A
+Q: root analyze の flutter_lints include エラーと「Statement should be on a separate line」を解消し、verify を通す。
+A:
+- root の `analysis_options.yaml` 参照先が無かったため、root `pubspec.yaml` に `flutter_lints` を追加して include エラーを解消。
+- `tools/check_english_literals.dart` の単行if/return/continueをブロック化して lint を解消。
+- `dart analyze .` から対象2種のメッセージが消えたことを確認。
+- `melos run verify` は pass。
+Meta: branch=feature/fix-analysisoptions-root-and-format commit=HEAD test=melos run verify (pass)
+Park: なし
+Next: M0-A5 iOS起動確認（ユーザー実施） / DoD: iOSで起動し主要遷移が見える

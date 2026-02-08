@@ -125,7 +125,9 @@ List<Violation> scanFile(String filePath) {
   final violations = <Violation>[];
   final file = File(filePath);
 
-  if (!file.existsSync()) return violations;
+  if (!file.existsSync()) {
+    return violations;
+  }
 
   final lines = file.readAsLinesSync();
   for (var i = 0; i < lines.length; i++) {
@@ -172,14 +174,18 @@ List<String> collectDartFiles(String rootPath) {
 
   for (final target in targets) {
     final dir = Directory('$rootPath/$target');
-    if (!dir.existsSync()) continue;
+    if (!dir.existsSync()) {
+      continue;
+    }
 
     dir.listSync(recursive: true).forEach((entity) {
       if (entity is File && entity.path.endsWith('.dart')) {
         final path = entity.path.replaceAll('\\', '/');
 
         // 除外: test/ 配下
-        if (path.contains('/test/')) return;
+        if (path.contains('/test/')) {
+          return;
+        }
 
         // 除外: 生成コード
         if (path.endsWith('.g.dart') || path.endsWith('.freezed.dart')) {
@@ -187,7 +193,9 @@ List<String> collectDartFiles(String rootPath) {
         }
 
         // 除外: l10n_ja 自体（ここは日本語文言の定義場所）
-        if (path.contains('/l10n_ja/')) return;
+        if (path.contains('/l10n_ja/')) {
+          return;
+        }
 
         files.add(entity.path);
       }
