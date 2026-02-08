@@ -1,2 +1,3 @@
 - (2026-02-07) `melos run verify` が未定義で実行不可 / plan: `melos.yaml` に verify（bootstrap+analyze+test）を定義して再実行
 - (2026-02-07) `melos bootstrap` が `0 packages bootstrapped` のまま / plan: workspace解決方式（melos vs pub workspace）を次タスクで統一
+- (2026-02-08) Firestore/認証の本格導入は未実施 / plan: backendの最小ストアをFirestore+認可に置換する

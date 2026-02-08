@@ -24,7 +24,7 @@
   - Windows: あり（`apps/dangi_app/windows/`）
   - iOS: **なし**（`apps/dangi_app/ios/` ディレクトリが存在しない）
 - Backend / Contracts:
-  - `backend/`: READMEのみ（未実装）
+  - `backend/`: 最小API（health / sync push / sync pull）
   - `contracts/`: openapi.yaml / schemas/*.json / README（最小契約）
 
 ## 3. 現状の実装ステータス（出来てる/未実装/不明）

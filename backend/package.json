@@ -1,0 +1,19 @@
+{
+  "name": "polaris-backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js"
+  },
+  "dependencies": {
+    "fastify": "^4.26.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.30",
+    "tsx": "^4.7.0",
+    "typescript": "^5.4.5"
+  }
+}

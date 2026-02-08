@@ -14,17 +14,21 @@ API / DB / migrations
 - **12_SYNC_API_SPEC.md 準拠**（M3で実装）
 - **08_ARCHITECTURE.md 準拠**（LLM呼び出しはバックエンド経由）
 
-## ディレクトリ構成（M3で作成予定）
+## ディレクトリ構成（M3最小）
 
 ```
 backend/
-  api/                   # API実装
-  db/                    # DB接続・マイグレーション
-  auth/                  # 認証
-  llm/                   # LLM API プロキシ
-  migrations/            # スキーマ変更履歴
+  src/                   # API最小実装（health / sync push / sync pull）
+  .data/                 # ローカル最小ストア（append-only）
 ```
 
-## M0 実装状況
+## 起動（ローカル最小）
+- `cd backend`
+- `npm install`
+- `PORT=8081 npm run dev`
+- `curl http://localhost:8081/v1/health`
+- `curl -X POST http://localhost:8081/v1/sync/pull -H 'content-type: application/json' -d '{\"cursor\":null,\"limit\":10}'`
 
-- ⏳ 空フォルダ（M3で実装予定）
+## M3 実装状況
+
+- 最小API（health / sync push / sync pull）まで実装
