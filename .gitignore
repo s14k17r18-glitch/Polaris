@@ -77,6 +77,10 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# Backend
+backend/node_modules/
+backend/.data/
+
 # OS
 .DS_Store
 .AppleDouble

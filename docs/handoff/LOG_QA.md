@@ -104,6 +104,17 @@ A:
 - contracts/openapi.yaml と docs/12 のエンドポイントに合わせた入出力で疎通可能にした。
 - `docs/PROGRESS_CHECKLIST.md` に M3-A3a/A3b を追加し、A3a を完了扱いに更新。
 - `docs/handoff/LOG_QA.md` の M3-A2 エントリ Meta を commit=a3412f1 で修正。
-Meta: branch=feature/M3-sync-min-backend commit=TBD test=backend curl smoke
+Meta: branch=main commit=6027cf8 test=backend curl smoke
 Park: Firestore/認証の本格導入は後タスク（最小ストアで仮実装）。
 Next: Flutter側の SyncClient 疎通（M3-A3b）に着手する。
+
+### [2026-02-08 18] Q/A
+Q: M3-A3bとしてshared_coreにSyncClientを追加し、backendと疎通できる導線を整備する。
+A:
+- shared_coreにSyncClientとモデルを追加し、contractsと整合するpush/pullを実装。
+- dangi_appにSYNC_PROBEの隠し導線を追加し、Runbookに手動疎通手順を追記。
+- LOG_QAのPR #9 Metaをcommit=6027cf8に更新。
+- melos run verify が pass し、PROGRESS_CHECKLIST の M3-A3b を [x] に更新。
+Meta: branch=feature/M3-syncclient-wireup commit=HEAD test=melos run verify (pass)
+Park: なし
+Next: SyncClient の本接続（Auth/Firestore）前提を整理する。

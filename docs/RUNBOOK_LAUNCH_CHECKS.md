@@ -73,3 +73,24 @@ Evidence:
 - OK/NG:
 - Stuck at:
 - Logs:
+
+## SyncClient smoke (M3-A3b)
+### Prereq
+- backend の最小APIが起動できること（`backend/README.md` 参照）
+
+### Commands (example)
+```bash
+cd backend
+npm install
+PORT=8080 npm run dev
+```
+
+別ターミナルで:
+```bash
+cd apps/dangi_app
+flutter run -d windows --dart-define=SYNC_PROBE=true --dart-define=SYNC_BASE_URL=http://localhost:8080
+```
+
+### Evidence to paste
+- backend の起動ログ（listening 行）
+- Flutter の起動ログに `SYNC_PROBE: push/pull completed`

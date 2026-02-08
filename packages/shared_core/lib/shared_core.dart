@@ -43,5 +43,6 @@ export 'src/model/crystal_entity.dart';
 export 'src/storage/local_store.dart';
 export 'src/storage/in_memory_store.dart';
 
-// M2以降で実装
-// export 'src/sync/sync_client.dart';
+// M3: Sync（最小）
+export 'src/sync/sync_models.dart';
+export 'src/sync/sync_client.dart';
