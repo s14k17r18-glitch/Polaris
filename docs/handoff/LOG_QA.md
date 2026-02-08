@@ -151,3 +151,14 @@ A:
 Meta: branch=main commit=8e22c24 test=docs troubleshoot guide
 Park: なし
 Next: M0-A5 iOS起動確認（ユーザー実施） / DoD: iOSで起動し主要遷移が見える
+
+### [2026-02-08 22] Q/A
+Q: WSLで発生する「Target of URI doesn't exist」等の大量解析エラーを解消し、verify を通す。
+A:
+- 原因は Flutter アプリを `dart analyze` で解析していたため、`package:flutter/*` や依存が解決できないこと。
+- `melos` の analyze スクリプト（pubspec.yaml / melos.yaml）を `flutter analyze`（app）＋ `dart analyze`（packages）に分離。
+- `melos run verify` が通り、import解決エラーは0になった。
+- 依存更新は行わず、設定のみ最小修正。
+Meta: branch=feature/fix-wsl-verify-analyzer commit=HEAD test=melos run verify (pass)
+Park: なし
+Next: M0-A5 iOS起動確認（ユーザー実施） / DoD: iOSで起動し主要遷移が見える
