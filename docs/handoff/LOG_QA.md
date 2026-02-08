@@ -93,6 +93,17 @@ A:
 - `contracts/schemas/*.json`（session/message/crystal/persona/persona_snapshot/tombstone/common）を追加し、ID/metadata/tombstone を最小契約で明文化。
 - `contracts/README.md` に契約の正・更新方針・versioningを明記。
 - `docs/MASTER_PLAN.md` と `docs/PROGRESS_CHECKLIST.md` を更新し、M3-A2を完了扱いに反映。
-Meta: branch=feature/M3-contracts-skeleton commit=TBD test=docs/contracts update only
+Meta: branch=main commit=a3412f1 test=docs/contracts update only
 Park: なし
 Next: M3-A3（Sync push/pull 最小実装）の着手準備を整理する。
+
+### [2026-02-08 18] Q/A
+Q: M3-A3aとしてcontracts準拠のSync push/pull最小実装をbackendに追加し、LOG_QAのMetaを確定する。
+A:
+- backendに Fastify + TS の最小サーバ（/v1/health, /v1/sync/push, /v1/sync/pull）とappend-onlyストアを追加。
+- contracts/openapi.yaml と docs/12 のエンドポイントに合わせた入出力で疎通可能にした。
+- `docs/PROGRESS_CHECKLIST.md` に M3-A3a/A3b を追加し、A3a を完了扱いに更新。
+- `docs/handoff/LOG_QA.md` の M3-A2 エントリ Meta を commit=a3412f1 で修正。
+Meta: branch=feature/M3-sync-min-backend commit=TBD test=backend curl smoke
+Park: Firestore/認証の本格導入は後タスク（最小ストアで仮実装）。
+Next: Flutter側の SyncClient 疎通（M3-A3b）に着手する。

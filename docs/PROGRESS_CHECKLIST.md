@@ -27,6 +27,8 @@
 - [x] M3-A0 データ最小契約（ID/append-only/tombstone）固定 / DoD: docs/13 が存在し、コードと矛盾しない
 - [x] M3-A1 Backend stack 決定 / DoD: 言語/ホスト/認証方針が決定
 - [x] M3-A2 contracts(OpenAPI/Schema) 整備 / DoD: docsに契約が固定
-- [ ] M3-A3 Sync push/pull 最小実装 / DoD: 片方向でも同期できる
+- [ ] M3-A3 Sync push/pull 最小実装（A3a/A3b） / DoD: A3a/A3bのDoDを満たす
+- [x] M3-A3a Backend最小実装（push/pull/health） / DoD: ローカルでcurl疎通できる
+- [ ] M3-A3b Flutter SyncClient疎通 / DoD: 端末からpush/pullできる
 - [ ] M3-A4 競合ログ/オフライン復帰 / DoD: 壊れず復帰できる
 - [ ] M3-A5 LLM Proxy 統合（Gemini方式はDecision Pending可） / DoD: クライアントに秘密無しで呼べる
