@@ -195,3 +195,14 @@ A:
 Meta: branch=feature/M1-theme-input-wireup commit=HEAD test=melos run verify (pass)
 Park: なし
 Next: M1-A2 personaSelect 最小実装 / DoD: 遷移が成立し議論へ入れる
+
+### [2026-02-09 02] Q/A
+Q: M1-A2としてpersonaSelectを最小実装し、議論へ遷移できる導線を作る。
+A:
+- persona選択画面を追加し、固定リストから複数選択できる最小UIを実装。
+- 選択済みペルソナをConversationEngine/Crystal生成/Session保存に反映し、固定文字列を排除。
+- テーマ入力→ペルソナ選択→議論開始の遷移が成立することを確認。
+- `melos run verify` は pass。
+Meta: branch=feature/M1-persona-select-min commit=HEAD test=melos run verify (pass)
+Park: なし
+Next: M1-A3 Ritual→Ending 完走（両OS） / DoD: 想定フローが通る

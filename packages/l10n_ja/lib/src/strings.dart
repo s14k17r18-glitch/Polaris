@@ -43,6 +43,7 @@ class L10nJa {
   // 状態説明（B2 で追加）
   static const String descIdle = 'セッションを開始するには「開始」をタップしてください';
   static const String descThemeInput = 'テーマを入力してください（M1で実装）';
+  static const String descPersonaSelect = '参加するペルソナを選択してください';
   static const String descNotImplemented = 'この画面は M1 以降で実装予定です';
 
   // 状態説明（M1-D2 で追加）
