@@ -173,3 +173,14 @@ A:
 Meta: branch=feature/fix-analysisoptions-root-and-format commit=HEAD test=melos run verify (pass)
 Park: なし
 Next: M0-A5 iOS起動確認（ユーザー実施） / DoD: iOSで起動し主要遷移が見える
+
+### [2026-02-08 24] Q/A
+Q: M0-A5は未実施のまま固定し、M1へ進むNextを確定してdocsを整合させる。
+A:
+- M0-A5は未実施のまま維持し、代替証跡はM0-A5b（CI no-codesign）で十分という運用を固定。
+- `docs/MASTER_PLAN.md` の Next single action を M1-A1（テーマ入力値の注入）へ更新。
+- `docs/PROGRESS_CHECKLIST.md` は M0-A5=[ ] / M0-A5b=[x] の事実を維持し、次はM1へ移行する前提を明確化。
+- 以降のNextはM1-A1で進める。
+Meta: branch=feature/next-step-m1-kickoff commit=HEAD test=docs update only
+Park: なし
+Next: M1-A1 テーマ入力値をUI→Engineへ注入 / DoD: 固定文字列でない
