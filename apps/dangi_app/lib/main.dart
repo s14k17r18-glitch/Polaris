@@ -48,6 +48,9 @@ class _SessionScreenState extends State<SessionScreen> {
   // M1-A1: テーマ入力（UI→Engine）
   final TextEditingController _themeController = TextEditingController();
   ThemeInput? _themeInput;
+  final List<PersonaDefinition> _availablePersonas =
+      PersonaRepository.instance.getAll();
+  final Set<String> _selectedPersonaIds = {};
 
   // M1-D2: 会話エンジン（discussion 状態で初期化）
   ConversationEngine? _conversationEngine;
@@ -117,6 +120,36 @@ class _SessionScreenState extends State<SessionScreen> {
     }
   }
 
+  void _ensureDefaultPersonaSelection() {
+    if (_selectedPersonaIds.isNotEmpty) return;
+    for (final persona in _availablePersonas) {
+      _selectedPersonaIds.add(persona.id);
+    }
+  }
+
+  List<PersonaDefinition> _resolveSelectedPersonas() {
+    if (_selectedPersonaIds.isEmpty) {
+      return _availablePersonas;
+    }
+    final selected = _availablePersonas
+        .where((persona) => _selectedPersonaIds.contains(persona.id))
+        .toList();
+    return selected.isEmpty ? _availablePersonas : selected;
+  }
+
+  void _applyPersonaSelectionFromSession(SessionEntity session) {
+    final availableIds = _availablePersonas.map((p) => p.id).toSet();
+    final ids = session.participants
+        .map((entry) => entry['persona_id'])
+        .whereType<String>()
+        .where(availableIds.contains)
+        .toList();
+    _selectedPersonaIds
+      ..clear()
+      ..addAll(ids);
+    _ensureDefaultPersonaSelection();
+  }
+
   String? _currentThemeValue() {
     final value = _themeInput?.value ?? _themeController.text.trim();
     if (value.isEmpty) return null;
@@ -143,7 +176,7 @@ class _SessionScreenState extends State<SessionScreen> {
       case SessionState.themeInput:
         return _buildThemeInputScreen();
       case SessionState.personaSelect:
-        return _buildNotImplementedScreen(L10nJa.statePersonaSelect);
+        return _buildPersonaSelectScreen();
       case SessionState.ignition:
         // ignition → discussion の自動遷移（M1-D2）
         WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -277,6 +310,66 @@ class _SessionScreenState extends State<SessionScreen> {
             _buildActionButton(
               label: L10nJa.buttonNext,
               onPressed: canSubmit ? _submitThemeInput : null,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// ペルソナ選択画面（M1-A2最小）
+  Widget _buildPersonaSelectScreen() {
+    final canProceed = _selectedPersonaIds.isNotEmpty;
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(UITokens.spacingLg),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              L10nJa.statePersonaSelect,
+              style: TextStyle(
+                fontSize: 24,
+                color: UITokens.colorAccent,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: UITokens.spacingMd),
+            Text(
+              L10nJa.descPersonaSelect,
+              style: TextStyle(
+                fontSize: 14,
+                color: UITokens.colorAccent.withAlpha(153),
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: UITokens.spacingLg),
+            for (final persona in _availablePersonas)
+              CheckboxListTile(
+                value: _selectedPersonaIds.contains(persona.id),
+                onChanged: (checked) {
+                  setState(() {
+                    if (checked == true) {
+                      _selectedPersonaIds.add(persona.id);
+                    } else {
+                      _selectedPersonaIds.remove(persona.id);
+                    }
+                  });
+                },
+                title: Text(
+                  persona.name,
+                  style: TextStyle(color: UITokens.colorAccent),
+                ),
+                subtitle: Text(
+                  persona.stance,
+                  style: TextStyle(color: UITokens.colorAccent.withAlpha(153)),
+                ),
+                controlAffinity: ListTileControlAffinity.leading,
+              ),
+            const SizedBox(height: UITokens.spacingLg),
+            _buildActionButton(
+              label: L10nJa.buttonNext,
+              onPressed: canProceed ? _submitPersonaSelect : null,
             ),
           ],
         ),
@@ -426,7 +519,7 @@ class _SessionScreenState extends State<SessionScreen> {
     // ConversationEngine 初期化（初回のみ）
     _conversationEngine ??= ConversationEngine(
       theme: theme,
-      personas: PersonaRepository.instance.getAll(),
+      personas: _resolveSelectedPersonas(),
     );
 
     setState(() {
@@ -477,7 +570,7 @@ class _SessionScreenState extends State<SessionScreen> {
         _crystalDraft = SummaryCrystal.generateCrystalDraft(
           theme: theme,
           messages: _messages,
-          participants: PersonaRepository.instance.getAll(),
+          participants: _resolveSelectedPersonas(),
           turnCount: _conversationEngine!.currentTurnIndex,
         );
       });
@@ -730,7 +823,7 @@ class _SessionScreenState extends State<SessionScreen> {
     _turnIndex = 0;
 
     // M2-E5: PersonaSnapshot 保存（MVP: 固定3名）
-    final personas = PersonaRepository.instance.getAll();
+    final personas = _resolveSelectedPersonas();
     for (int i = 0; i < personas.length && i < 3; i++) {
       final persona = personas[i];
       final snapshot = PersonaSnapshotEntity(
@@ -761,9 +854,8 @@ class _SessionScreenState extends State<SessionScreen> {
       createdAt: DateTime.now().toIso8601String(),
       theme: theme,
       participants: [
-        {'persona_id': 'p1', 'seat': 0},
-        {'persona_id': 'p2', 'seat': 1},
-        {'persona_id': 'p3', 'seat': 2},
+        for (int i = 0; i < personas.length; i++)
+          {'persona_id': personas[i].id, 'seat': i},
       ],
       roundsMax: 20,
       sync: SyncMetadata(
@@ -867,6 +959,7 @@ class _SessionScreenState extends State<SessionScreen> {
     setState(() {
       _themeInput = ThemeInput(value: latest.theme);
       _themeController.text = latest.theme;
+      _applyPersonaSelectionFromSession(latest);
       _messages.clear();
       for (final msg in messages) {
         _messages.add('${msg.speakerId}：${msg.text}');
@@ -1022,6 +1115,7 @@ class _SessionScreenState extends State<SessionScreen> {
     setState(() {
       _themeInput = ThemeInput(value: session.theme);
       _themeController.text = session.theme;
+      _applyPersonaSelectionFromSession(session);
       _showingHistory = false;
       _messages.clear();
       for (final msg in messages) {
@@ -1054,7 +1148,14 @@ class _SessionScreenState extends State<SessionScreen> {
     if (value.isEmpty) return;
     setState(() {
       _themeInput = ThemeInput(value: value);
+      _conversationEngine = null;
+      _ensureDefaultPersonaSelection();
     });
     _transition(SessionEvent.themeSubmitted);
+  }
+
+  void _submitPersonaSelect() {
+    if (_selectedPersonaIds.isEmpty) return;
+    _transition(SessionEvent.personasSelected);
   }
 }
