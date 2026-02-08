@@ -24,6 +24,7 @@
 - [ ] M2-A3 履歴→復元が破綻しない / DoD: 主要ケースでOK
 
 ## M3（同期＋Backend＋LLM Proxy）
+- [x] M3-A0 データ最小契約（ID/append-only/tombstone）固定 / DoD: docs/13 が存在し、コードと矛盾しない
 - [ ] M3-A1 Backend stack 決定 / DoD: 言語/ホスト/認証方針が決定
 - [ ] M3-A2 contracts(OpenAPI/Schema) 整備 / DoD: docsに契約が固定
 - [ ] M3-A3 Sync push/pull 最小実装 / DoD: 片方向でも同期できる

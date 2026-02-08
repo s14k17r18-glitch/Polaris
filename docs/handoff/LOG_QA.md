@@ -63,3 +63,14 @@ A:
 Meta: branch=feature/M0-ci-ios-build commit=amended test=CI iOS (no-codesign) pass
 Park: なし
 Next: iOS起動確認（M0-A5）を実施してログを共有する。
+
+### [2026-02-08 17] Q/A
+Q: M3前提のデータ最小契約（ID/append-only/tombstone）をdocsとコードに照合して固定する。
+A:
+- docs/13_MIN_DATA_CONTRACT.md を新規作成し、ID設計（UUIDv7）、append-only、tombstone、競合/版本ルールを固定。
+- 既存コードの SyncMetadata / Entity / FileLocalStore を根拠に、矛盾なしとして記述（証跡パスを明記）。
+- docs/PROGRESS_CHECKLIST.md に M3-A0 を追加し、DoD達成として [x] に更新。
+- 変更は docs/handoff を含むドキュメントのみで実施。
+Meta: branch=feature/M3-min-data-contract commit=TBD test=docs update only
+Park: なし
+Next: PRを作成してレビュー依頼する。
