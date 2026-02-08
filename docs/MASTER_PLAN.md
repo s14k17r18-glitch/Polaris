@@ -170,4 +170,4 @@
 5. ローカル保存破損 → schema_version + migration + exportバックアップ
 
 ## 10. Next single action（1つ）
-- M1-A1 テーマ入力値をUI→Engineへ注入し、M1縦スライスの入口を作る（M0-A5は端末準備後に実施）
+- M1-A2 personaSelect 最小実装で遷移を成立させ、議論へ入れる（M0-A5は端末準備後に実施）

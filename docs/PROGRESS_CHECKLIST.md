@@ -14,7 +14,7 @@
 - [ ] M0-A5 iOS起動確認（ユーザー実施） / DoD: iOSで起動し主要遷移が見える
 
 ## M1（談議縦スライス完走）
-- [ ] M1-A1 テーマ入力値をUI→Engineへ注入 / DoD: 固定文字列でない
+- [x] M1-A1 テーマ入力値をUI→Engineへ注入 / DoD: 固定文字列でない
 - [ ] M1-A2 personaSelect 最小実装 / DoD: 遷移が成立し議論へ入れる
 - [ ] M1-A3 Ritual→Ending 完走（両OS） / DoD: 想定フローが通る
 

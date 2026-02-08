@@ -45,6 +45,10 @@ class SessionScreen extends StatefulWidget {
 class _SessionScreenState extends State<SessionScreen> {
   final SessionMachine _machine = SessionMachine();
 
+  // M1-A1: テーマ入力（UI→Engine）
+  final TextEditingController _themeController = TextEditingController();
+  ThemeInput? _themeInput;
+
   // M1-D2: 会話エンジン（discussion 状態で初期化）
   ConversationEngine? _conversationEngine;
 
@@ -94,6 +98,7 @@ class _SessionScreenState extends State<SessionScreen> {
   void dispose() {
     _streamSubscription?.cancel();
     _store.close();
+    _themeController.dispose();
     super.dispose();
   }
 
@@ -110,6 +115,12 @@ class _SessionScreenState extends State<SessionScreen> {
         _machine.transition(event);
       });
     }
+  }
+
+  String? _currentThemeValue() {
+    final value = _themeInput?.value ?? _themeController.text.trim();
+    if (value.isEmpty) return null;
+    return value;
   }
 
   @override
@@ -137,7 +148,9 @@ class _SessionScreenState extends State<SessionScreen> {
         // ignition → discussion の自動遷移（M1-D2）
         WidgetsBinding.instance.addPostFrameCallback((_) async {
           // M2-E4: セッション開始時の保存
-          await _saveSessionStart('テスト議題');
+          final theme = _currentThemeValue();
+          if (theme == null) return;
+          await _saveSessionStart(theme);
           _transition(SessionEvent.sessionStarted);
         });
         return _buildNotImplementedScreen(L10nJa.stateIgnition);
@@ -228,6 +241,7 @@ class _SessionScreenState extends State<SessionScreen> {
 
   /// テーマ入力画面
   Widget _buildThemeInputScreen() {
+    final canSubmit = _themeController.text.trim().isNotEmpty;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(UITokens.spacingLg),
@@ -252,9 +266,17 @@ class _SessionScreenState extends State<SessionScreen> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: UITokens.spacingXl),
+            TextField(
+              controller: _themeController,
+              onChanged: (_) => setState(() {}),
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: UITokens.spacingLg),
             _buildActionButton(
               label: L10nJa.buttonNext,
-              onPressed: () => _transition(SessionEvent.themeSubmitted),
+              onPressed: canSubmit ? _submitThemeInput : null,
             ),
           ],
         ),
@@ -399,9 +421,11 @@ class _SessionScreenState extends State<SessionScreen> {
 
   /// 次のターン生成ハンドラ（M1-D2）
   void _handleNextTurn() async {
+    final theme = _currentThemeValue();
+    if (theme == null) return;
     // ConversationEngine 初期化（初回のみ）
     _conversationEngine ??= ConversationEngine(
-      theme: 'テスト議題', // TODO: M1で実装時に実際のテーマを渡す
+      theme: theme,
       personas: PersonaRepository.instance.getAll(),
     );
 
@@ -445,11 +469,13 @@ class _SessionScreenState extends State<SessionScreen> {
 
   /// 結論トリガーハンドラ（M1-D2, M1-D4で拡張）
   void _handleConclusion() async {
+    final theme = _currentThemeValue();
+    if (theme == null) return;
     // M1-D4: Crystal Draft を生成
     if (_conversationEngine != null) {
       setState(() {
         _crystalDraft = SummaryCrystal.generateCrystalDraft(
-          theme: 'テスト議題', // TODO: M1で実装時に実際のテーマを渡す
+          theme: theme,
           messages: _messages,
           participants: PersonaRepository.instance.getAll(),
           turnCount: _conversationEngine!.currentTurnIndex,
@@ -593,8 +619,7 @@ class _SessionScreenState extends State<SessionScreen> {
 
   /// エラー画面（M1-B3）
   Widget _buildErrorScreen() {
-    final errorMessage =
-        _machine.errorContext?.message ?? L10nJa.errorGeneric;
+    final errorMessage = _machine.errorContext?.message ?? L10nJa.errorGeneric;
     final details = _machine.errorContext?.details;
 
     return Padding(
@@ -840,6 +865,8 @@ class _SessionScreenState extends State<SessionScreen> {
     messages.sort((a, b) => a.turnIndex.compareTo(b.turnIndex));
 
     setState(() {
+      _themeInput = ThemeInput(value: latest.theme);
+      _themeController.text = latest.theme;
       _messages.clear();
       for (final msg in messages) {
         _messages.add('${msg.speakerId}：${msg.text}');
@@ -993,6 +1020,8 @@ class _SessionScreenState extends State<SessionScreen> {
     messages.sort((a, b) => a.turnIndex.compareTo(b.turnIndex));
 
     setState(() {
+      _themeInput = ThemeInput(value: session.theme);
+      _themeController.text = session.theme;
       _showingHistory = false;
       _messages.clear();
       for (final msg in messages) {
@@ -1018,5 +1047,14 @@ class _SessionScreenState extends State<SessionScreen> {
         }
       }
     });
+  }
+
+  void _submitThemeInput() {
+    final value = _themeController.text.trim();
+    if (value.isEmpty) return;
+    setState(() {
+      _themeInput = ThemeInput(value: value);
+    });
+    _transition(SessionEvent.themeSubmitted);
   }
 }
